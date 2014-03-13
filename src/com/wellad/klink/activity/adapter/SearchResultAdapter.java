@@ -7,6 +7,7 @@ package com.wellad.klink.activity.adapter;
 
 import com.wellad.klink.R;
 import com.wellad.klink.activity.api.Item;
+import com.wellad.klink.business.Config;
 import com.wellad.klink.business.model.ProductCategoryBean;
 import com.wellad.klink.business.model.PushMessage;
 import com.wellad.klink.business.model.SearchResult;
@@ -46,7 +47,16 @@ public class SearchResultAdapter extends ArrayListAdapter<SearchResult> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		holder.textView.setText(bean.getCategoryname());
+		holder.textView.setText(bean.getTitle());
+		
+		if (Config.APP_USER_LANGUAGE.equals("cn")) {
+			holder.textView.setText(bean.getTitle());
+		} else if (Config.APP_USER_LANGUAGE.equals("en")) {
+			holder.textView.setText(bean.getEngtitle());
+		} else if (Config.APP_USER_LANGUAGE.equals("mala")) {
+			holder.textView.setText(bean.getMalatitle());
+		}
+		
 		return convertView;
 	}
 	
