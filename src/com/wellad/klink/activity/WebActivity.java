@@ -56,12 +56,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
+import android.webkit.WebSettings.ZoomDensity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -128,12 +130,28 @@ public class WebActivity extends BaseActivity {
 		
 		// WEBVIEW
 		webView = (WebView) this.findViewById(R.id.webView);
+		 WebSettings webSettings = webView.getSettings();
 		webView.getSettings().setTextSize(WebSettings.TextSize.LARGEST);
 		webView.getSettings().setJavaScriptEnabled(true); // 设置支持Javascript
 		webView.getSettings().setLoadWithOverviewMode(true);
 		webView.getSettings().setUseWideViewPort(true);
 		webView.requestFocus();// 触摸焦点起作用
+		webView.setInitialScale(100);//为25%，最小缩放等级 
 		
+		DisplayMetrics metrics = new DisplayMetrics();
+		  getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		  int mDensity = metrics.densityDpi;
+		  if (mDensity == 240) {
+		   webSettings.setDefaultZoom(ZoomDensity.FAR);
+		  } else if (mDensity == 160) {
+		     webSettings.setDefaultZoom(ZoomDensity.MEDIUM);
+		  } else if(mDensity == 120) {
+		   webSettings.setDefaultZoom(ZoomDensity.CLOSE);
+		  }else if(mDensity == DisplayMetrics.DENSITY_XHIGH){
+		   webSettings.setDefaultZoom(ZoomDensity.FAR);
+		  }else if (mDensity == DisplayMetrics.DENSITY_TV){
+		   webSettings.setDefaultZoom(ZoomDensity.FAR);
+		  }
 		
 		proDialog = ProgressDialog.show(this, getResources().getString(R.string.webview_load_title), getResources().getString(R.string.webview_load_wait));
 		loadFinished = false;
