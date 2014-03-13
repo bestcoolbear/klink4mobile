@@ -301,6 +301,41 @@ public class AboutUsActivity extends BaseActivity implements OnItemClickListener
 				}, true);
 	}
 	
+	/**
+	 * 初始化数据
+	 */
+	private void subCateBean2WebView() {
+		ActivityUtils.doAsync(AboutUsActivity.this,
+				R.string.ptitle_resource_id, R.string.pmessage_resource_id,
+				new Callable<ArrayList<SubCateBean>>() {
+
+					@Override
+					public ArrayList<SubCateBean> call() {
+						// TODO Auto-generated method stub
+						return GeneralTools.getBusinessOpportunity();
+					}
+
+				}, new Callback<ArrayList<SubCateBean>>() {
+
+					@Override
+					public void onCallback(ArrayList<SubCateBean> pCallbackValue) {
+						// TODO Auto-generated method stub
+						if (!doSearchResult(pCallbackValue)) {
+							subCateBeanAdapter.setList(pCallbackValue);
+							listView.setAdapter(subCateBeanAdapter);
+						}
+					}
+
+				}, new Callback<Exception>() {
+
+					@Override
+					public void onCallback(Exception pCallbackValue) {
+						// TODO Auto-generated method stub
+						
+					}
+
+				}, true);
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
