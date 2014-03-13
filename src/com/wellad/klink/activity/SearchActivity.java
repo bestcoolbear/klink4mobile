@@ -18,6 +18,7 @@ import com.wellad.klink.business.GeneralTools;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -93,6 +94,7 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 					public String call() {
 						// TODO Auto-generated method stub
 						if (checking()) {
+							Log.i("search result count =====", GeneralTools.getSearchResult(content).size() + "");
 							KLinkApplication.getInstance().setSrList(GeneralTools.getSearchResult(content));
 							return String.valueOf(KLinkApplication.getInstance().getSrList().size());
 						} else {
