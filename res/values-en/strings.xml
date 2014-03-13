@@ -1,0 +1,61 @@
+<resources>
+
+    <string name="app_name">klink4mobile</string>
+    
+    <string name="account_username">Username</string>
+    <string name="account_password">Password</string>
+    <string name="account_name">Name</string>
+    <string name="account_email">Email</string>
+    <string name="account_dateofbirth">Date of Birth</string>
+    <string name="account_dateofgender">Gender</string>
+    <string name="account_gender">Gender</string>
+    <string name="account_address">Address</string>
+    <string name="klink_membercode">K-Link Member Code</string>
+    <string name="function_doit">Do it!</string>
+    
+    <string name="login_text">Login</string>
+    <string name="register_text">Register ?</string>
+    
+    <string name="title_home">Home</string>
+    <string name="title_product">Product</string>
+    <string name="title_about">About Us</string>
+    <string name="title_contact">Contact Us</string>
+    <string name="title_news">News &amp; Events</string>
+    <string name="title_download">Download</string>
+    <string name="title_business">Business Opportunity</string>
+    <string name="title_login">Login</string>
+    <string name="title_register">Register</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="title_search">Search</string>
+    <string name="title_inbox">Inbox</string>
+    <string name="title_around">Around Me</string>
+    
+    <string name="ptitle_resource_id">Wait</string>
+    <string name="pmessage_resource_id">loading&#8230;</string>
+    
+  	<string name="webview_load_title">Connecting&#8230;</string>
+    <string name="webview_load_wait">Please Wait&#8230;</string>
+    
+    <string name="alert_username">Please fill in username.</string>
+    <string name="alert_password">Please fill in password.</string>
+    <string name="alert_name">Please fill in name.</string>
+    <string name="alert_email">Please fill in email address.</string>
+    <string name="alert_email_invalid">Invalid email address.</string>
+    <string name="alert_brith">Please fill in date of birth.</string>
+    <string name="alert_address">Please fill in address.</string>
+    
+    <string name="alert_nosearhkeywards">Please input search key words.</string>
+    <string name="alert_nosearchresult">No result.</string>
+    
+    <string name="alert_register_ing">Registering&#8230;</string>
+    <string name="alert_register_ok">Register successfully!</string>
+  	<string name="alert_register_failed_4">Username is already in use.</string>
+  	<string name="alert_register_failed_3">Login failed. Youare not connected to the internet.</string>
+  	<string name="alert_register_failed_6">Invalid username or password.</string>
+  	
+  	<string name="alert_login_ing">Loging&#8230;</string>
+  	<string name="alert_login_ok">Loging successfully!</string>
+    
+    <string name="gender_male">male</string>
+    <string name="gender_female">female</string>
+</resources>

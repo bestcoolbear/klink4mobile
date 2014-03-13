@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_pure" >
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp" >
+
+     	<RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp" >
+
+            <TextView
+                android:id="@+id/searchtextView"
+                style="@style/RegisterTextLabel"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/alert_nosearhkeywards" />
+
+            <EditText
+                android:id="@+id/searchedittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/searchtextView"
+                android:layout_below="@+id/searchtextView"
+                android:ems="10" >
+
+                <requestFocus />
+            </EditText>
+        </RelativeLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/goTextView"
+        style="@style/RegisterTextLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/scrollView"
+        android:layout_marginLeft="16dp"
+        android:text="@string/function_doit"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <com.wellad.klink.activity.ui.widget.TopBar
+        android:id="@+id/topBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
+</RelativeLayout>
