@@ -5,6 +5,8 @@
  */
 package com.wellad.klink.activity;
 
+import java.util.ArrayList;
+
 import org.andengine.util.ActivityUtils;
 import org.andengine.util.call.Callable;
 import org.andengine.util.call.Callback;
@@ -14,6 +16,7 @@ import com.wellad.klink.R;
 import com.wellad.klink.activity.ui.widget.TopBar;
 import com.wellad.klink.business.Config;
 import com.wellad.klink.business.GeneralTools;
+import com.wellad.klink.business.model.SearchResult;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -94,9 +97,10 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 					public String call() {
 						// TODO Auto-generated method stub
 						if (checking()) {
-							Log.i("search result count =====", GeneralTools.getSearchResult(content).size() + "");
-							KLinkApplication.getInstance().setSrList(GeneralTools.getSearchResult(content));
-							return String.valueOf(KLinkApplication.getInstance().getSrList().size());
+							ArrayList<SearchResult> job = GeneralTools.getSearchResult(content);
+							Log.i("search result count =====", job.size() + "");
+							KLinkApplication.getInstance().setSrList(job);
+							return String.valueOf(job.size());
 						} else {
 							return "checking out";
 						}
@@ -108,7 +112,8 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 					public void onCallback(String pCallbackValue) {
 						// TODO Auto-generated method stub
 						if (!Config.CoverStringNull(pCallbackValue)) {
-							if (pCallbackValue.contains("0")) {
+							int count = Integer.parseInt(pCallbackValue);
+							if (count == 0) {
 								// success
 								GeneralTools.showAlertDialog(getResources().getString(R.string.alert_nosearchresult), SearchActivity.this);
 							} else {
