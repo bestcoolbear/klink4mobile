@@ -11,4 +11,53 @@
     <string name="account_address">地址</string>
     <string name="klink_membercode">康立会员编号</string>
     
+    
+    <string name="function_doit">开始搜索!!</string>
+    
+    <string name="login_text">登录</string>
+    <string name="register_text">注册 ?</string>
+    
+    <string name="title_home">主页</string>
+    <string name="title_product">产品</string>
+    <string name="title_about">关于我们</string>
+    <string name="title_contact">联系方式</string>
+    <string name="title_news">新闻与活动</string>
+    <string name="title_download">下载</string>
+    <string name="title_business">商业机会</string>
+    <string name="title_login">登录</string>
+    <string name="title_register">注册</string>
+    <string name="title_favorite">收藏</string>
+    <string name="title_search">搜索</string>
+    <string name="title_inbox">消息</string>
+    <string name="title_around">周边</string>
+    
+    <string name="ptitle_resource_id">请稍等</string>
+    <string name="pmessage_resource_id">加载中&#8230;</string>
+    
+  	<string name="webview_load_title">正在连接中&#8230;</string>
+    <string name="webview_load_wait">请等待&#8230;</string>
+    
+    <string name="alert_username">请填写用户名.</string>
+    <string name="alert_password">请填写密码.</string>
+    <string name="alert_name">请填写昵称.</string>
+    <string name="alert_email">请填写电子邮件地址.</string>
+    <string name="alert_email_invalid">无效的邮件地址.</string>
+    <string name="alert_brith">请填写出生日期.</string>
+    <string name="alert_address">请填写地址.</string>
+    
+    <string name="alert_nosearhkeywards">请输入搜索的关键字.</string>
+    <string name="alert_nosearchresult">没有搜索结果.</string>
+    
+    <string name="alert_register_ing">注册中&#8230;</string>
+    <string name="alert_register_ok">注册成功!</string>
+  	<string name="alert_register_failed_4">用户名已被使用.</string>
+  	<string name="alert_register_failed_3">登录失败. 请确认您的设备是否连接到Internet.</string>
+  	<string name="alert_register_failed_6">无效的用户名或密码.</string>
+  	
+  	<string name="alert_login_ing">登录中&#8230;</string>
+  	<string name="alert_login_ok">登录成功!</string>
+    
+    <string name="gender_male">男性</string>
+    <string name="gender_female">女性</string>
+    
 </resources>

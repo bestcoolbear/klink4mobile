@@ -11,7 +11,7 @@
     <string name="account_gender">Gender</string>
     <string name="account_address">Address</string>
     <string name="klink_membercode">K-Link Member Code</string>
-    <string name="function_doit">Do it!</string>
+    <string name="function_doit">Just do it !!</string>
     
     <string name="login_text">Login</string>
     <string name="register_text">Register ?</string>
@@ -58,4 +58,5 @@
     
     <string name="gender_male">male</string>
     <string name="gender_female">female</string>
+                                
 </resources>
