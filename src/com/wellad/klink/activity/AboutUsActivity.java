@@ -111,7 +111,16 @@ public class AboutUsActivity extends BaseActivity implements OnItemClickListener
 			for (SubCateBean bean : pCallbackValue) {
 				if (bean.getSubcatname().equals(categoryName)) {
 					Config.searchresultbean = null;
-					AboutUsDetailActivity.launch(AboutUsActivity.this, usType, bean.getSubcatname(), bean.getSubcatid(), true);
+					String title = null;
+					if (Config.APP_USER_LANGUAGE.equals("cn")) {
+						title = Config.searchresultbean.getTitle();
+					} else if (Config.APP_USER_LANGUAGE.equals("en")) {
+						title = Config.searchresultbean.getEngtitle();
+					} else if (Config.APP_USER_LANGUAGE.equals("mala")) {
+						title = Config.searchresultbean.getMalatitle();
+					}
+					WebActivity.launch(AboutUsActivity.this, usType, title, Config.searchresultbean.getHtmlurl(), true);
+					Config.searchresultbean = null;
 					return true;
 				}
 			}

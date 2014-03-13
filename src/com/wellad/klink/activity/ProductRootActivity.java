@@ -78,8 +78,18 @@ public class ProductRootActivity extends BaseActivity implements OnItemClickList
 			for (ProductCategoryBean bean : pCallbackValue) {
 				if (bean.getCategoryname().equals(Config.searchresultbean.getCategoryname())
 						|| Config.searchresultbean.getCategoryname().equals(bean.getCategoryname())) {
+					//Config.searchresultbean = null;
+					String title = null;
+					if (Config.APP_USER_LANGUAGE.equals("cn")) {
+						title = Config.searchresultbean.getTitle();
+					} else if (Config.APP_USER_LANGUAGE.equals("en")) {
+						title = Config.searchresultbean.getEngtitle();
+					} else if (Config.APP_USER_LANGUAGE.equals("mala")) {
+						title = Config.searchresultbean.getMalatitle();
+					}
+					WebActivity.launch(ProductRootActivity.this, Config.US_PRODUCT, title, Config.searchresultbean.getHtmlurl(), true);
 					Config.searchresultbean = null;
-					ProductDetailActivity.launch(ProductRootActivity.this, bean.getCategoryname(), bean.getCategoryid(), true);
+					//ProductDetailActivity.launch(ProductRootActivity.this, bean.getCategoryname(), bean.getCategoryid(), true);
 					return true;
 				}
 			}
