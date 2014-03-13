@@ -19,6 +19,8 @@ import android.app.Application;
  * 
  * @author Wang Yiming
  */
+
+//TEST UPDATE
 public class KLinkApplication extends Application {
 	// Instance
 	private static KLinkApplication instance;
