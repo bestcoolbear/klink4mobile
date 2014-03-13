@@ -28,6 +28,18 @@ local.properties
 # PDT-specific
 .buildpath
 
+#################
+## Android:
+#################
+
+proguard/**
+target/**
+bin/**
+obj/**
+doc/**
+gen/**
+gdb.setup
+gdbserver
 
 #################
 ## Visual Studio
