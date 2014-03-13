@@ -153,6 +153,7 @@ public class GeneralTools {
 							String mala_title = jsonObj.getString("mala_title");
 							String title = jsonObj.getString("title");
 							String catename = jsonObj.getString("cate_name");
+							String htmlurl = jsonObj.getString("producthtml");
 							String resulttype = jsonObj
 									.getString("result_type");
 							result.setCategoryname(catename);
@@ -160,6 +161,7 @@ public class GeneralTools {
 							result.setMalatitle(mala_title);
 							result.setTitle(title);
 							result.setResulttype(resulttype);
+							result.setHtmlurl(htmlurl);
 							resultlist.add(result);
 						}
 
@@ -175,11 +177,14 @@ public class GeneralTools {
 							String catename = jsonObj.getString("cate_name");
 							String resulttype = jsonObj
 									.getString("result_type");
+							String htmlurl = jsonObj.getString("producthtml");
+
 							result.setCategoryname(catename);
 							result.setEngtitle(eng_title);
 							result.setMalatitle(mala_title);
 							result.setTitle(title);
 							result.setResulttype(resulttype);
+							result.setHtmlurl(htmlurl);
 							resultlist.add(result);
 						}
 

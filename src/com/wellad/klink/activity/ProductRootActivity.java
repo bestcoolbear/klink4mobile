@@ -87,7 +87,7 @@ public class ProductRootActivity extends BaseActivity implements OnItemClickList
 					} else if (Config.APP_USER_LANGUAGE.equals("mala")) {
 						title = Config.searchresultbean.getMalatitle();
 					}
-					WebActivity.launch(ProductRootActivity.this, Config.US_PRODUCT, title, Config.searchresultbean.getHtmlurl(), true);
+					WebActivity.launch(ProductRootActivity.this, Config.US_PRODUCT, title, "http://117.53.153.156/klink/" + Config.searchresultbean.getHtmlurl(), true);
 					Config.searchresultbean = null;
 					//ProductDetailActivity.launch(ProductRootActivity.this, bean.getCategoryname(), bean.getCategoryid(), true);
 					return true;

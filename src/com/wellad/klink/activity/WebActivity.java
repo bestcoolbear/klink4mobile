@@ -134,6 +134,7 @@ public class WebActivity extends BaseActivity {
 		webView.getSettings().setUseWideViewPort(true);
 		webView.requestFocus();// 触摸焦点起作用
 		
+		
 		proDialog = ProgressDialog.show(this, getResources().getString(R.string.webview_load_title), getResources().getString(R.string.webview_load_wait));
 		loadFinished = false;
 		webView.loadUrl(url);
