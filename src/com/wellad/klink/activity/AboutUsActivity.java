@@ -326,7 +326,7 @@ public class AboutUsActivity extends BaseActivity implements OnItemClickListener
 		AboutUsActivity.this.startActivity(intent);
 		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 	//	if (AboutUsActivity.this) {
-			AboutUsActivity.this.finish();
+		//	AboutUsActivity.this.finish();
 	//	}
 	}
 	
