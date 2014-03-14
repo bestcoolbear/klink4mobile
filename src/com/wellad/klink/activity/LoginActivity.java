@@ -112,6 +112,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			passwordEditText.setText(extraPassword);
 		}
 		initTopBarEvent(this);
+		
+		//for test
+		//loging();
 	}
 
 	@Override

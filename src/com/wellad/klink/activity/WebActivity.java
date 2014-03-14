@@ -154,7 +154,7 @@ public class WebActivity extends BaseActivity {
 		webView.getSettings().setLoadWithOverviewMode(true);
 		webView.getSettings().setUseWideViewPort(true);
 		webView.requestFocus();// 触摸焦点起作用
-		webView.setInitialScale(100);//为25%，最小缩放等级 
+		webView.setInitialScale(110);//为25%，最小缩放等级 
 		
 		DisplayMetrics metrics = new DisplayMetrics();
 		  getWindowManager().getDefaultDisplay().getMetrics(metrics);
