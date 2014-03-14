@@ -317,8 +317,17 @@ public class AboutUsActivity extends BaseActivity implements OnItemClickListener
 		Log.i("current list ==",currentlist+"");
 		
 		SubCateBean bean = ((SubCateBeanAdapter) arg0.getAdapter()).getList().get(arg2);
-		AboutUsDetailActivity.launch(AboutUsActivity.this, usType, bean.getSubcatname(), bean.getSubcatid());
+	//	AboutUsDetailActivity.launch(AboutUsActivity.this, usType, bean.getSubcatname(), bean.getSubcatid());
 		
+		Intent intent = new Intent(AboutUsActivity.this, AboutUsDetailActivity.class);
+		intent.putExtra("usType", usType);
+		intent.putExtra("subcatname", bean.getSubcatname());
+		intent.putExtra("subcatid", bean.getSubcatid());
+		AboutUsActivity.this.startActivity(intent);
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+	//	if (AboutUsActivity.this) {
+			AboutUsActivity.this.finish();
+	//	}
 	}
 	
 }

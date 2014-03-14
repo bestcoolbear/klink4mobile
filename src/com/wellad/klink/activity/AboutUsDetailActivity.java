@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -45,7 +46,7 @@ public class AboutUsDetailActivity extends BaseActivity implements OnItemClickLi
 	 * 
 	 * @param a
 	 */
-	public static void launch(Activity a, int usType, String subcatname, String subcatid) {
+	public void launch(Activity a, int usType, String subcatname, String subcatid) {
 		launch(a, usType, subcatname, subcatid, false);
 	}
 	
@@ -54,12 +55,13 @@ public class AboutUsDetailActivity extends BaseActivity implements OnItemClickLi
 	 * 
 	 * @param a
 	 */
-	public static void launch(Activity a, int usType, String subcatname, String subcatid, boolean finish) {
+	public void launch(Activity a, int usType, String subcatname, String subcatid, boolean finish) {
 		Intent intent = new Intent(a, AboutUsDetailActivity.class);
 		intent.putExtra("usType", usType);
 		intent.putExtra("subcatname", subcatname);
 		intent.putExtra("subcatid", subcatid);
 		a.startActivity(intent);
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 		if (finish) {
 			a.finish();
 		}
@@ -118,8 +120,36 @@ public class AboutUsDetailActivity extends BaseActivity implements OnItemClickLi
 							//ArticleActivity.launch(AboutUsDetailActivity.this, usType, subcatname, subcatid, true);
 							subCateBean2WebView();
 						} else {
-							subCateBeanAdapter.setList(pCallbackValue);
-							listView.setAdapter(subCateBeanAdapter);
+							Log.i("sub list value size ==== ", pCallbackValue.size() + "");
+							if(usType == Config.US_BUSINESS){//单独处理
+									SubCateBean sb = pCallbackValue.get(0);
+									if(sb.getSubcatname().contains("Plan")){
+										Config.BUSINESS_OPP_LIST.clear();
+										Config.BUSINESS_OPP_LIST = pCallbackValue;
+									}
+									
+									listView.setVisibility(View.INVISIBLE);
+									launch(AboutUsDetailActivity.this, usType, sb.getSubcatname(), sb.getSubcatid(), true);
+
+							}else if(usType == Config.US_DOWNLOAD){
+								SubCateBean sb = pCallbackValue.get(0);
+								if(sb.getSubcatname().contains("english riddance")){
+									Config.BUSINESS_OPP_LIST.clear();
+									Config.BUSINESS_OPP_LIST = pCallbackValue;
+								}
+								
+								listView.setVisibility(View.INVISIBLE);
+								launch(AboutUsDetailActivity.this, usType, sb.getSubcatname(), sb.getSubcatid(), true);
+								
+							}
+
+							else{
+								Config.BUSINESS_OPP_LIST.clear();
+								listView.setVisibility(View.VISIBLE);
+								subCateBeanAdapter.setList(pCallbackValue);
+								listView.setAdapter(subCateBeanAdapter);
+								//
+							}
 						}
 						
 					}
@@ -197,7 +227,7 @@ public class AboutUsDetailActivity extends BaseActivity implements OnItemClickLi
 				intent.setData(content_url);
 				startActivity(intent);
 			} else {
-				ArticleActivity.launch(AboutUsDetailActivity.this, usType, bean.getSubcatname(), bean.getSubcatid(), true);
+				launch(AboutUsDetailActivity.this, usType, bean.getSubcatname(), bean.getSubcatid(), true);
 			}
 		}
  }

@@ -45,6 +45,8 @@ import com.wellad.klink.activity.api.Item;
 import com.wellad.klink.activity.db.ExpandDatabaseImpl;
 import com.wellad.klink.activity.ui.widget.TopBar;
 import com.wellad.klink.business.Config;
+import com.wellad.klink.business.GeneralTools;
+import com.wellad.klink.business.model.ArticleBean;
 import com.wellad.player.test_videoplayer;
 
 import android.app.Activity;
@@ -67,6 +69,8 @@ import android.webkit.WebSettings.ZoomDensity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 /**
  * 
@@ -84,6 +88,10 @@ public class WebActivity extends BaseActivity {
 	Vector<String> videovector = new Vector<String>();
 	Vector<String> urlvector = new Vector<String>();
 	String videourl = "http://www.youtube.com/embed";
+	
+	ImageButton leftimage;
+	ImageButton rightimage;
+	int currentsubindex = 0;
 
 	/**
 	 * Launch
@@ -96,6 +104,7 @@ public class WebActivity extends BaseActivity {
 		intent.putExtra("title", title);
 		intent.putExtra("url", url);
 		a.startActivity(intent);
+
 		if (finish) {
 			a.finish();
 		}
@@ -128,6 +137,15 @@ public class WebActivity extends BaseActivity {
 			
 		});
 		
+		leftimage = (ImageButton) this.findViewById(R.id.imageButtonLeft);
+		rightimage = (ImageButton) this.findViewById(R.id.imageButtonRight);
+
+		leftimage.setVisibility(View.INVISIBLE);
+		rightimage.setVisibility(View.INVISIBLE);
+		
+		
+		
+
 		// WEBVIEW
 		webView = (WebView) this.findViewById(R.id.webView);
 		 WebSettings webSettings = webView.getSettings();
@@ -154,8 +172,11 @@ public class WebActivity extends BaseActivity {
 		  }
 		
 		proDialog = ProgressDialog.show(this, getResources().getString(R.string.webview_load_title), getResources().getString(R.string.webview_load_wait));
+		
 		loadFinished = false;
 		webView.loadUrl(url);
+		Log.i("url webview load ===",url);
+
 		webView.setWebViewClient(new WebViewClient() {
 
 			@Override
@@ -237,26 +258,138 @@ public class WebActivity extends BaseActivity {
 			
 		}) ;
 		
+		
 		// TODO 老顾，几个入口的地方都标示出来了
-		switch (usType) {
-		case Config.US_ABOUT: // about us 入口
-			break;
-		case Config.US_CONTACT: // contact us 入口
-			break; 
-		case Config.US_NEWSEVENTS: // news and evnets 入口
-			break; 
-		case Config.US_BUSINESS: // business 入口
-			break;
-		case Config.US_DOWNLOAD: // download 入口
-			break; 
-		case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
-			break; 
-		case Config.US_AROUNDME: // around me
-			break;
-		case Config.US_PRODUCT: // product 入口
-			break;
-		case Config.US_INBOX: // push message 入口
-			break;
+				switch (usType) {
+				case Config.US_ABOUT: // about us 入口
+					break;
+				case Config.US_CONTACT: // contact us 入口
+					break; 
+				case Config.US_NEWSEVENTS: // news and evnets 入口
+					break; 
+				case Config.US_BUSINESS: // business 入口
+					if(text.contains("Plan") ){
+						leftimage.setVisibility(View.VISIBLE);
+						rightimage.setVisibility(View.VISIBLE);
+						currentsubindex = 0;
+					}
+					break;
+				case Config.US_DOWNLOAD: // download 入口
+					if(text.contains("english riddance")){
+						leftimage.setVisibility(View.VISIBLE);
+						rightimage.setVisibility(View.VISIBLE);
+						currentsubindex = 0;
+					}
+					break; 
+				case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
+					break; 
+				case Config.US_AROUNDME: // around me
+					break;
+				case Config.US_PRODUCT: // product 入口
+					break;
+				case Config.US_INBOX: // push message 入口
+					break;
+				}
+		
+		
+	}
+	
+	private String getUrl(String id) {
+		return Config.LOADDETAILURL + id + "&lang=" + Config.APP_USER_LANGUAGE;
+	}
+	
+	public void leftClick(View view) {
+		if(usType == Config.US_BUSINESS || usType == Config.US_DOWNLOAD){
+			if(Config.BUSINESS_OPP_LIST != null && Config.BUSINESS_OPP_LIST.size() > 0){
+				if(currentsubindex == 0){
+					  Toast.makeText(getApplicationContext(), "No more content,at first page!",
+							     Toast.LENGTH_SHORT).show();
+				  }else{
+					   currentsubindex = currentsubindex -1;
+						ActivityUtils.doAsync(WebActivity.this,
+			    				R.string.ptitle_resource_id, R.string.ptitle_resource_id,
+			    				new Callable<ArrayList<ArticleBean>>() {
+
+			    					@Override
+			    					public ArrayList<ArticleBean> call()
+			    							throws Exception {
+			    						// TODO Auto-generated method stub
+			    						return GeneralTools.getArticleList(Config.BUSINESS_OPP_LIST.get(currentsubindex).getSubcatid());
+			    					}
+
+			    				}, new Callback<ArrayList<ArticleBean>>() {
+
+			    					@Override
+			    					public void onCallback(
+			    							ArrayList<ArticleBean> pCallbackValue) {
+			    						// TODO Auto-generated method stub
+			    						if (pCallbackValue != null && pCallbackValue.size() == 1) {
+			    							String htmlurl = getUrl(pCallbackValue.get(0).getArticleid());
+			    							//WebActivity.launch(ArticleActivity.this, usType, subcatname, htmlurl, true);
+			    							topBar.getTitleTextView().setText(pCallbackValue.get(0).getArticletitle());
+			    							webView.loadUrl(htmlurl);
+			    						
+			    				    		Log.i("url ===",htmlurl);
+			    						}
+			    					}
+
+			    				}, new Callback<Exception>() {
+			    					@Override
+			    					public void onCallback(Exception pCallbackValue) {
+			    						// TODO Auto-generated method stub
+			    					}
+
+			    				}, true);
+				  }
+			}
+		}
+	}
+	
+	public void rightClick(View view) {
+		if(usType == Config.US_BUSINESS || usType == Config.US_DOWNLOAD){
+			if(Config.BUSINESS_OPP_LIST != null && Config.BUSINESS_OPP_LIST.size() > 0){
+				if(currentsubindex < Config.BUSINESS_OPP_LIST.size() - 1){
+					
+					currentsubindex = currentsubindex + 1;
+					ActivityUtils.doAsync(WebActivity.this,
+		    				R.string.ptitle_resource_id, R.string.ptitle_resource_id,
+		    				new Callable<ArrayList<ArticleBean>>() {
+
+		    					@Override
+		    					public ArrayList<ArticleBean> call()
+		    							throws Exception {
+		    						// TODO Auto-generated method stub
+		    						return GeneralTools.getArticleList(Config.BUSINESS_OPP_LIST.get(currentsubindex).getSubcatid());
+		    					}
+
+		    				}, new Callback<ArrayList<ArticleBean>>() {
+
+		    					@Override
+		    					public void onCallback(
+		    							ArrayList<ArticleBean> pCallbackValue) {
+		    						// TODO Auto-generated method stub
+		    						if (pCallbackValue != null && pCallbackValue.size() == 1) {
+		    							String htmlurl = getUrl(pCallbackValue.get(0).getArticleid());
+		    							//WebActivity.launch(ArticleActivity.this, usType, subcatname, htmlurl, true);
+		    							topBar.getTitleTextView().setText(pCallbackValue.get(0).getArticletitle());
+		    							webView.loadUrl(htmlurl);
+		    				    		Log.i("url ===",htmlurl);
+		    						}
+		    					}
+
+		    				}, new Callback<Exception>() {
+		    					@Override
+		    					public void onCallback(Exception pCallbackValue) {
+		    						// TODO Auto-generated method stub
+		    					}
+
+		    				}, true);
+					
+				  }else{
+					  Toast.makeText(getApplicationContext(), "No more content,at last page!",
+							     Toast.LENGTH_SHORT).show();
+				  }
+			}
 		}
 	}
 	
@@ -412,7 +545,7 @@ private void sendMsg(int flag)
 	            	progressDialog.dismiss();
 	            }
 	            
-	        
+
 	            /*
 	            videoView.setVideoURI(Uri.parse("rtsp://v4.cache1.c.youtube.com/CiILENy73wIaGQk4RDShYkdS1BMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp"));
 	            videoView.setMediaController(new MediaController(AlertDetail.this));

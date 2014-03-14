@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import com.wellad.klink.business.model.AroundMeLocation;
 import com.wellad.klink.business.model.AroundMeShop;
 import com.wellad.klink.business.model.SearchResult;
+import com.wellad.klink.business.model.SubCateBean;
 
 import android.util.Log;
 
@@ -77,6 +78,9 @@ public class Config {
 	public static boolean VIDEO_FROM;
 	public static String VIDEO_Name;
     public static String VIDEO_URL;
+    
+    
+    public static List<SubCateBean> BUSINESS_OPP_LIST = new ArrayList<SubCateBean>();
 
 	/*
 	

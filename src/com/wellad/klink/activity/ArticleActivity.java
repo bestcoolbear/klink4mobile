@@ -44,12 +44,13 @@ public class ArticleActivity extends BaseActivity implements OnItemClickListener
 	 * 
 	 * @param a
 	 */
-	public static void launch(Activity a, int usType, String subcatname, String subcatid, boolean finish) {
+	public void launch(Activity a, int usType, String subcatname, String subcatid, boolean finish) {
 		Intent intent = new Intent(a, ArticleActivity.class);
 		intent.putExtra("usType", usType);
 		intent.putExtra("subcatname", subcatname);
 		intent.putExtra("subcatid", subcatid);
 		a.startActivity(intent);
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 		if (finish) {
 			a.finish();
 		}
