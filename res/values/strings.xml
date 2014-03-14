@@ -30,7 +30,7 @@
     <string name="title_inbox">Inbox</string>
     <string name="title_around">Around Me</string>
     
-    <string name="ptitle_resource_id">Wait</string>
+    <string name="ptitle_resource_id">Wait...</string>
     <string name="pmessage_resource_id">loading&#8230;</string>
     
   	<string name="webview_load_title">Connecting&#8230;</string>
