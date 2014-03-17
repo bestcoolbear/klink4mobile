@@ -88,8 +88,8 @@ public class test_videoplayer extends Activity {
     class DownEvent implements OnClickListener{
     	 public void onClick(View arg0) {  
     		 
-    		 Config.VIDEO_Name = "Test";
-    		 Config.VIDEO_URL = "rtsp://r8---sn-p5qlsu7e.c.youtube.com/CiILENy73wIaGQneB4yyodyDbBMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp";
+    		// Config.VIDEO_Name = "Test";
+    		// Config.VIDEO_URL = "rtsp://r8---sn-p5qlsu7e.c.youtube.com/CiILENy73wIaGQneB4yyodyDbBMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp";
     		 
     		 
     		 if(Config.VIDEO_Name != null && Config.VIDEO_URL != null)

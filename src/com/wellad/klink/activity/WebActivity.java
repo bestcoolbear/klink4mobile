@@ -1120,6 +1120,8 @@ private void sendMsg(int flag)
 	    Matcher m = p.matcher(html);
 	    List<String> matches = new ArrayList<String>();
 	    while (m.find()) {
+	    	Log.i("add-----", m.group());
+	    	
 	        matches.add(m.group());
 	    }
 
@@ -1129,11 +1131,14 @@ private void sendMsg(int flag)
 
 	        return null;
 	    }
+	    
 
 	    String urls[] = matches.get(0).split(",");
 	    HashMap<String, String> foundArray = new HashMap<String, String>();
 	    for (String ppUrl : urls) {
 	        String url = URLDecoder.decode(ppUrl, "UTF-8");
+	        
+	        Log.i("url ============= ",url);
 
 	        Pattern p1 = Pattern.compile("itag=([0-9]+?)[&]");
 	        Matcher m1 = p1.matcher(url);
@@ -1142,7 +1147,7 @@ private void sendMsg(int flag)
 	            itag = m1.group(1);
 	        }
 
-	        Pattern p2 = Pattern.compile("sig=(.*?)[&]");
+	        Pattern p2 = Pattern.compile("signature=(.*?)[&]");
 	        Matcher m2 = p2.matcher(url);
 	        String sig = null;
 	        if (m2.find()) {
