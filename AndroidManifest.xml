@@ -4,7 +4,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="10"
+        android:minSdkVersion="13"
         android:targetSdkVersion="18" />
 
     <supports-screens
@@ -170,6 +170,15 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         
+        
+        <activity
+            android:name=".activity.ListsubFavorite"
+            android:configChanges="locale"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        
+ 
         
        <activity android:name="com.wellad.player.test_videoplayer"  android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>        
         

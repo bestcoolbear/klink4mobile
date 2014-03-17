@@ -78,6 +78,7 @@ public class Config {
 	public static boolean VIDEO_FROM;
 	public static String VIDEO_Name;
     public static String VIDEO_URL;
+    public static String catid;
     
     
     public static List<SubCateBean> BUSINESS_OPP_LIST = new ArrayList<SubCateBean>();

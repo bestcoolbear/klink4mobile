@@ -25,6 +25,7 @@ import org.apache.http.params.CoreProtocolPNames;
 
 import com.wellad.klink.R;
 import com.wellad.klink.business.Config;
+import com.wellad.klink.util.FileUtil;
 
 import android.app.Activity;  
 import android.app.AlertDialog;
@@ -86,11 +87,19 @@ public class test_videoplayer extends Activity {
     
     class DownEvent implements OnClickListener{
     	 public void onClick(View arg0) {  
+    		 
+    		 Config.VIDEO_Name = "Test";
+    		 Config.VIDEO_URL = "rtsp://r8---sn-p5qlsu7e.c.youtube.com/CiILENy73wIaGQneB4yyodyDbBMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp";
+    		 
+    		 
     		 if(Config.VIDEO_Name != null && Config.VIDEO_URL != null)
     		 {
     			 if(player != null){
     	                player.stop();  
     			 }
+    			 
+ 				FileUtil.creatDir("KLinkAPP/" + "Download");
+
    		  	  new YouTubePageStreamUriGetter().execute( Config.VIDEO_URL,Config.VIDEO_Name + "_" + Config.APP_USER_LANGUAGE + ".3gp");
 
     		 }

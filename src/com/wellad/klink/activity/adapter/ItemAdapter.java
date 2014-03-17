@@ -41,8 +41,13 @@ public class ItemAdapter extends ArrayListAdapter<Item> {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+		String flaglist = item.getText();
 		
-		holder.textView.setText(item.getText());
+		flaglist = flaglist.replaceAll("_en", "");
+		flaglist = flaglist.replaceAll("_cn", "");
+		flaglist = flaglist.replaceAll("_mala", "");
+		flaglist = flaglist.replaceAll(".html", "");
+		holder.textView.setText(flaglist);
 		
 		return convertView;
 	}

@@ -33,6 +33,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -47,11 +49,14 @@ import com.wellad.klink.activity.ui.widget.TopBar;
 import com.wellad.klink.business.Config;
 import com.wellad.klink.business.GeneralTools;
 import com.wellad.klink.business.model.ArticleBean;
+import com.wellad.klink.util.FileUtil;
+import com.wellad.klink.util.HttpDownloader;
 import com.wellad.player.test_videoplayer;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -60,15 +65,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.ZoomDensity;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -82,13 +87,16 @@ public class WebActivity extends BaseActivity {
 	private String text;
 	
 	private ProgressDialog proDialog;
-	private boolean loadFinished;
+	boolean loadFinished;
 
 	Vector<String> imagevector = new Vector<String>();
 	Vector<String> videovector = new Vector<String>();
 	Vector<String> urlvector = new Vector<String>();
 	String videourl = "http://www.youtube.com/embed";
-	
+	String htmlurl = "";
+	String htmlstring = "";
+	  String productname = "";
+
 	ImageButton leftimage;
 	ImageButton rightimage;
 	int currentsubindex = 0;
@@ -109,7 +117,40 @@ public class WebActivity extends BaseActivity {
 			a.finish();
 		}
 	}
-
+	
+	 class getHtmlHandler implements Runnable {
+		  public void run() {
+			  htmlstring = "";
+			  htmlstring = GeneralTools.getPageHtmlString(htmlurl);
+				if(htmlstring != null && htmlstring.length() > 0)
+				{
+					sendMsg(10);
+				}else{
+					sendMsg(11);
+				}
+			}
+	  }
+	
+	private void add2FavoriteAndSave2Sdcard(String subcatename)
+	{
+		if(loadFinished == true)
+		{
+			Log.i("add to favorite","add to favorite");
+			String sdroot = FileUtil.getSdRoot();
+			Log.i("sd root",sdroot);
+			if(sdroot != null && sdroot.length() > 0)
+			{
+				FileUtil.creatDir("KLinkAPP/" + subcatename);
+				if(htmlurl != null && htmlurl.length() > 0)
+				{
+					proDialog = ProgressDialog.show(WebActivity.this, "Saving...","Please Wait....", true, true);
+					Thread getHtmlThread = new Thread(new getHtmlHandler());
+					getHtmlThread.start();
+				}
+			}
+		}
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -125,14 +166,49 @@ public class WebActivity extends BaseActivity {
 		topBar.getLogoImageView().setVisibility(View.GONE);
 		topBar.getBackImageButton().setVisibility(View.VISIBLE);
 		topBar.getTitleTextView().setText(text);
+		productname = text + "_" + Config.APP_USER_LANGUAGE;
+
 		initTopBarEvent(this);
 		topBar.getFavoriteButton().setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//add2FavoriteAndSave2Sdcard();
-				add2Favorite();
+				
+				 String folder = "";
+	   		       	switch (usType) {
+	        		case Config.US_ABOUT: // about us 入口
+	        			folder = "About Us";
+	        			break;
+	        		case Config.US_CONTACT: // contact us 入口
+	        			folder = "Contact";
+
+	        			break; 
+	        		case Config.US_NEWSEVENTS: // news and evnets 入口
+	        			folder = "News";
+
+	        			break; 
+	        		case Config.US_BUSINESS: // business 入口
+	        			folder = "Business";
+
+	        			break; 
+	        		case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
+
+	        			break; 
+	        		case Config.US_AROUNDME: // around me
+	        			break;
+	        		case Config.US_DOWNLOAD: // download 入口
+	        			folder = "Download";
+
+	        		case Config.US_PRODUCT: // product 入口
+	        			folder = "Product";
+
+	        			break;
+	        		case Config.US_INBOX: // push message 入口
+	        			break;
+	        		}
+				add2FavoriteAndSave2Sdcard(folder);
+				//add2Favorite();
 			}
 			
 		});
@@ -144,18 +220,30 @@ public class WebActivity extends BaseActivity {
 		rightimage.setVisibility(View.INVISIBLE);
 		
 		
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int width = size.x;
+		int height = size.y;
 		
+		Log.i("screen width = ", width + "");
+		Log.i("screen height = ", height + "");
+
 
 		// WEBVIEW
 		webView = (WebView) this.findViewById(R.id.webView);
 		 WebSettings webSettings = webView.getSettings();
 		webView.getSettings().setTextSize(WebSettings.TextSize.LARGEST);
 		webView.getSettings().setJavaScriptEnabled(true); // 设置支持Javascript
-		webView.getSettings().setLoadWithOverviewMode(true);
-		webView.getSettings().setUseWideViewPort(true);
+		webView.getSettings().setDomStorageEnabled(true);
+		if(width > 480 && height > 800){
+			webView.getSettings().setLoadWithOverviewMode(true);
+			webView.getSettings().setUseWideViewPort(true);
+		}
 		webView.requestFocus();// 触摸焦点起作用
-		webView.setInitialScale(110);//为25%，最小缩放等级 
-		
+		//webView.setInitialScale(110);//
+		webView.loadUrl(url);
+		htmlurl = url;
 		DisplayMetrics metrics = new DisplayMetrics();
 		  getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		  int mDensity = metrics.densityDpi;
@@ -174,7 +262,6 @@ public class WebActivity extends BaseActivity {
 		proDialog = ProgressDialog.show(this, getResources().getString(R.string.webview_load_title), getResources().getString(R.string.webview_load_wait));
 		
 		loadFinished = false;
-		webView.loadUrl(url);
 		Log.i("url webview load ===",url);
 
 		webView.setWebViewClient(new WebViewClient() {
@@ -189,6 +276,7 @@ public class WebActivity extends BaseActivity {
 				}
 			}
 
+			
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				// TODO Auto-generated method stub
@@ -229,12 +317,34 @@ public class WebActivity extends BaseActivity {
 				case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
 					break; 
 				case Config.US_DOWNLOAD: // download 入口
+					if(url.contains("youtube.com") || url.contains("youtu")){
+	            		Log.i("play video",url);
+	            		if(url != null && url.length() > 0)
+	            		{
+		                    Config.VIDEO_FROM = true;
+		                	String[] splistes = url.split("#");
+                			String myurl = splistes[0];
+                			Config.VIDEO_URL = splistes[0];
+                			Config.VIDEO_Name =  splistes[1];
+                			Log.i("vidoe name",Config.VIDEO_Name);
+                			int index = myurl.lastIndexOf("/");
+                			String videoid = myurl.substring(index);
+                			videourl = videourl + videoid;
+                			Log.i("video url",videourl);
+
+                	        YourAsyncTask  mTask = new YourAsyncTask();
+                	        mTask.execute();
+	            	        return true;
+	            		}
+					}
+					break;
 				case Config.US_PRODUCT: // product 入口
 					
 					if(url.contains("youtube.com") || url.contains("youtu")){
 	            		Log.i("play video",url);
 	            		if(url != null && url.length() > 0)
 	            		{
+	      	               Config.VIDEO_FROM = false;
 	            			int index = url.lastIndexOf("/");
 	            			String videoid = url.substring(index);
 	            			videourl = videourl + videoid;
@@ -257,6 +367,8 @@ public class WebActivity extends BaseActivity {
 			}
 			
 		}) ;
+		
+		
 		
 		
 		// TODO 老顾，几个入口的地方都标示出来了
@@ -282,6 +394,7 @@ public class WebActivity extends BaseActivity {
 					}
 					break; 
 				case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
+					filterDoUrl();
 					break; 
 				case Config.US_AROUNDME: // around me
 					break;
@@ -292,6 +405,63 @@ public class WebActivity extends BaseActivity {
 				}
 		
 		
+	}
+	
+	
+	private void filterDoUrl()
+	{
+		webView.setWebChromeClient(new WebChromeClient() {
+			
+		});
+		
+		webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                	if(proDialog != null){
+                		proDialog.dismiss();
+                	}
+                        // TODO Auto-generated method stub
+                        proDialog.dismiss();
+                        loadFinished = true;
+                        super.onPageFinished(view, url);
+
+                }
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        // TODO Auto-generated method stub
+                        //锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟?锟斤拷锟斤拷锟解部锟斤拷转
+                	if(proDialog != null){
+                		proDialog.dismiss();
+                	}
+                		Log.i("content url",url);
+                		if(url.contains("youtube.com") || url.contains("youtu")){
+                			//锟斤拷锟叫诧拷锟斤拷锟斤拷
+                    		Log.i("play video",url);
+                    		if(url != null && url.length() > 0)
+                    		{
+
+                    			int index = url.lastIndexOf("/");
+                    			String videoid = url.substring(index);
+                    			videourl = "file://" + FileUtil.getSdRoot() + "/KLinkAPP/" + Config.catid  + videoid + ".3gp";
+                    			Log.i("video local",videourl);
+                     			
+                    			 Config.YOUTUBEURL = videourl;
+                         		
+                    			 Intent intent = new Intent(Intent.ACTION_VIEW);
+                    		     String type = "video/mp4";
+                    		     Uri uri = Uri.parse(Config.YOUTUBEURL);
+                    		     intent.setDataAndType(uri, type);
+                    		     startActivity(intent);   
+                    		}
+                		}else{
+                			
+                			
+                			view.loadUrl(url);
+                		}
+                        return true;
+                }
+                 
+		});
 	}
 	
 	private String getUrl(String id) {
@@ -459,10 +629,160 @@ public class WebActivity extends BaseActivity {
 	          case 1:
 	        	  //play video
 	        	  Intent intent  = new Intent();
-	              Config.VIDEO_FROM = false;
 	              intent.setClass(WebActivity.this, test_videoplayer.class);
 	              startActivity(intent);
 	            break;
+	            
+	          case 10:
+		        	 
+		        	
+		        	//  FileUtil.SavedToText("/KLinkAPP/Product/",productname + ".html",htmlstring);
+		        	  imagevector.clear();//清空
+		        	  videovector.clear();//清空
+		        	  
+		        	  try {  
+		        		  org.jsoup.nodes.Document doc = Jsoup.parse(htmlstring);
+		        		  Elements links = doc.getElementsByTag("img");
+		        		  Elements youlinks = doc.getElementsByTag("a");
+		        		  
+		        		  for (org.jsoup.nodes.Element link : links) {
+		        		    String linkHref = link.attr("src");
+		        		    if(linkHref != null && linkHref.length() > 0){
+		        		    	imagevector.add(linkHref);
+		        		    }
+		        		  }
+		        		  
+		        		  for (org.jsoup.nodes.Element link : youlinks) {
+			        		    String linkHref = link.attr("href");
+			        		    if(linkHref != null && linkHref.length() > 0){
+			        		      if(linkHref.contains("youtu.be") || linkHref.contains("youtube")){
+			        		    		videovector.add(linkHref);
+			        		    		Log.i("link herf VIDEO=====s",linkHref);
+			        		      }
+			        		    }
+			        	  }
+		        		  
+		              } catch (Exception e) {  
+		                  e.printStackTrace();  
+		              }  
+		              //下载图片
+		        	  if(imagevector.size() > 0){
+			        	  for(int i = 0; i < imagevector.size(); i ++)
+			        	  {
+			        		   final String imageurl = Config.IMAGEURL + imagevector.elementAt(i);
+			        		   final int size = imagevector.size();
+			        		   int index = imageurl.lastIndexOf("/");
+			        		   if(index > 0)
+			        		   {
+			        			   final String filename = imageurl.substring(index+1);
+			        			   final int count = i;
+				        		   Thread t = new Thread(
+				        				   new Runnable(){
+											@Override
+											public void run() {
+												 String folder = "";
+									   		       	switch (usType) {
+									        		case Config.US_ABOUT: // about us 入口
+									        			folder = "About Us";
+									        			break;
+									        		case Config.US_CONTACT: // contact us 入口
+									        			folder = "Contact";
+
+									        			break; 
+									        		case Config.US_NEWSEVENTS: // news and evnets 入口
+									        			folder = "News";
+
+									        			break; 
+									        		case Config.US_BUSINESS: // business 入口
+									        			folder = "Business";
+
+									        			break; 
+									        		case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
+
+									        			break; 
+									        		case Config.US_AROUNDME: // around me
+									        			break;
+									        		case Config.US_DOWNLOAD: // download 入口
+									        			folder = "Download";
+
+									        		case Config.US_PRODUCT: // product 入口
+									        			folder = "Product";
+
+									        			break;
+									        		case Config.US_INBOX: // push message 入口
+									        			break;
+									        		}
+								        		 if(HttpDownloader.downImageFile(imageurl,"KLinkAPP/" + folder + "/",filename) == 0 && (count == size-1)){
+								        			  sendMsg(12);
+								        		 }
+											}
+				        				}
+				        		    );
+				        		   t.start();
+				        		   htmlstring = htmlstring.replaceAll(imagevector.elementAt(i),filename);
+			        		   }
+			        	  	}
+		        	  }
+		        	  else{
+		        			  sendMsg(12);
+		        	  }
+		        	  break;
+		          case 11:
+		        	  GeneralTools.showAlertDialog("Connection Failed,Please check your device's internet connection", WebActivity.this);
+		        	  break;
+		          case 12:
+		        	  if (proDialog != null) {
+		    				proDialog.dismiss();
+		    		  }
+		        	  
+		         	  if(videovector.size() > 0){//下载视频
+		        		  for(int i = 0; i < videovector.size(); i ++)
+			        	  {
+		        			  String youtubeurl = videovector.elementAt(i);
+		        			  Log.i("youtube url",youtubeurl);
+		        			  int index = youtubeurl.lastIndexOf("/");
+		        			  String filename = youtubeurl.substring(index+1) + ".3gp";
+		        		  	  new YouTubePageStreamUriGetter().execute(youtubeurl,filename);
+			        	  }
+		         	  }
+		         	  
+		         	 String folder = "";
+		   		       	switch (usType) {
+		        		case Config.US_ABOUT: // about us 入口
+		        			folder = "About Us";
+		        			break;
+		        		case Config.US_CONTACT: // contact us 入口
+		        			folder = "Contact";
+
+		        			break; 
+		        		case Config.US_NEWSEVENTS: // news and evnets 入口
+		        			folder = "News";
+
+		        			break; 
+		        		case Config.US_BUSINESS: // business 入口
+		        			folder = "Business";
+
+		        			break; 
+		        		case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
+
+		        			break; 
+		        		case Config.US_AROUNDME: // around me
+		        			break;
+		        		case Config.US_DOWNLOAD: // download 入口
+		        			folder = "Download";
+
+		        		case Config.US_PRODUCT: // product 入口
+		        			folder = "Product";
+
+		        			break;
+		        		case Config.US_INBOX: // push message 入口
+		        			break;
+		        		}
+		         	  
+		        	  FileUtil.SavedToText("/KLinkAPP/" + folder + "/",productname + ".html",htmlstring);
+		        	 
+		        	//  GeneralTools.jumpToFav(ProductActivity.this,ProductActivity.this);
+		        	  break;
 	        }
 	      }
 	      super.handleMessage(msg);
@@ -592,7 +912,7 @@ private void sendMsg(int flag)
                         {
                             cursor = maps.get("url");
                         }
-                        if (f.equals("1"))
+                        if (f.equals("6"))
                             return cursor;
                     }
                 }
@@ -664,9 +984,94 @@ private void sendMsg(int flag)
 	        this.url = url;
 	    }
 	}
+	
+	
+	public void downloadVideo(String ytUrl,String filename)
+	{
+
+   	 //Log.i("YouTube Video streaming details: ext:" + newVideo.ext
+           //     + ", type:" + newVideo.type + ", url:" + newVideo.url,"AAAAA" + newVideo.url);
+   	Log.i("3gp download url",ytUrl);
+   	if(ytUrl != null && ytUrl.length() > 0){
+   		URL u = null;
+   		InputStream is = null;  
+   		     try {
+   		          u = new URL(ytUrl);
+   		          is = u.openStream(); 
+   		          HttpURLConnection huc = (HttpURLConnection)u.openConnection();//to know the size of video
+   		          if(huc != null){
+   		              String fileName = filename;
+   		              String storagePath = Environment.getExternalStorageDirectory().toString();
+   		              String folder = "";
+		   		       	switch (usType) {
+		        		case Config.US_ABOUT: // about us 入口
+		        			folder = "About Us";
+		        			break;
+		        		case Config.US_CONTACT: // contact us 入口
+		        			folder = "Contact";
+
+		        			break; 
+		        		case Config.US_NEWSEVENTS: // news and evnets 入口
+		        			folder = "News";
+
+		        			break; 
+		        		case Config.US_BUSINESS: // business 入口
+		        			folder = "Business";
+
+		        			break; 
+		        		case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
+
+		        			break; 
+		        		case Config.US_AROUNDME: // around me
+		        			break;
+		        		case Config.US_DOWNLOAD: // download 入口
+		        			folder = "Download";
+
+		        		case Config.US_PRODUCT: // product 入口
+		        			folder = "Product";
+
+		        			break;
+		        		case Config.US_INBOX: // push message 入口
+		        			break;
+		        		}
+   		              File f = new File(storagePath + "/KLinkAPP/" + folder + "/" ,fileName);
+   		              Log.i("store path====",storagePath + "/KLinkAPP/Product/");
+
+   		              FileOutputStream fos = new FileOutputStream(f);
+   		              byte[] buffer = new byte[1024];
+   		              int len1 = 0;
+   		              if(is != null){
+   		                 while ((len1 = is.read(buffer)) > 0) {
+   		                       fos.write(buffer,0, len1);   
+   		                 }
+   		              }
+   		              if(fos != null){
+   		                 fos.close();
+   		              }
+   		          }                     
+   		     }catch (MalformedURLException mue) {
+   		            mue.printStackTrace();
+   		     } catch (IOException ioe) {
+   		            ioe.printStackTrace();
+   		    } finally {
+   		               try {                
+   		                 if(is != null){
+   		                   is.close();
+   		                 }
+   		               }catch (IOException ioe) {
+   		                     // just going to ignore this one
+   		               }
+   		    }
+   	}
+ }
+
 
 	public ArrayList<Video> getStreamingUrisFromYouTubePage(String ytUrl,String filename)
 	        throws IOException {
+	//	Log.i("download video ==","getStreamingUrisFromYouTubePage");
+		Log.i("ytUrl",ytUrl);
+		Log.i("filename",filename);
+
 	    if (ytUrl == null) {
 	        return null;
 	    }
@@ -697,6 +1102,8 @@ private void sendMsg(int flag)
 	    in.close();
 	    html = str.toString();
 
+	    Log.i("000000000000000000",html);
+
 	    // Parse the HTML response and extract the streaming URIs
 	    if (html.contains("verify-age-thumb")) {
 	        Log.i("YouTube is asking for age verification. We can't handle that sorry.","");
@@ -718,6 +1125,8 @@ private void sendMsg(int flag)
 
 	    if (matches.size() != 1) {
 	        Log.i("Found zero or too many stream maps.","");
+		    Log.i("-----------------","----------------------------");
+
 	        return null;
 	    }
 
@@ -754,10 +1163,10 @@ private void sendMsg(int flag)
 	    }
 
 	    if (foundArray.size() == 0) {
-	        Log.i("Couldn't find any URLs and corresponding signatures","");
+		    Log.i("333333333333333333333","----------------------------");
 	        return null;
 	    }
-
+	    Log.i("11111111111111111111","1111111111111111111111111");
 	    HashMap<String, Meta> typeMap = new HashMap<String, Meta>();
 	    typeMap.put("13", new Meta("13", "3GP", "Low Quality - 176x144"));
 	    typeMap.put("17", new Meta("17", "3GP", "Medium Quality - 176x144"));
@@ -775,14 +1184,20 @@ private void sendMsg(int flag)
 	    typeMap.put("33", new Meta("38", "MP4", "High Quality - 4096x230"));
 
 	    ArrayList<Video> videos = new ArrayList<Video>();
+	    Log.i("22222222222222222222222222","1111111111111111111111111");
 
 	    for (String format : typeMap.keySet()) {
 	        Meta meta = typeMap.get(format);
-
+	        
+	        Log.i("format ===",format);
 	        if (foundArray.containsKey(format)) {
 	            Video newVideo = new Video(meta.ext, meta.type,
 	                    foundArray.get(format));
 	            videos.add(newVideo);
+	            
+	    		Log.i("download video ==","start download video..");
+	    		Log.i("newVideo ==",newVideo.ext);
+
 	            if(newVideo.ext.equals("3GP")){
 	            	 //Log.i("YouTube Video streaming details: ext:" + newVideo.ext
 	 	               //     + ", type:" + newVideo.type + ", url:" + newVideo.url,"AAAAA" + newVideo.url);
@@ -797,7 +1212,39 @@ private void sendMsg(int flag)
 	            		          if(huc != null){
 	            		              String fileName = filename;
 	            		              String storagePath = Environment.getExternalStorageDirectory().toString();
-	            		              File f = new File(storagePath + "/KLinkAPP/Product/",fileName);
+	            		              String folder = "";
+	          		   		       	switch (usType) {
+	          		        		case Config.US_ABOUT: // about us 入口
+	          		        			folder = "About Us";
+	          		        			break;
+	          		        		case Config.US_CONTACT: // contact us 入口
+	          		        			folder = "Contact";
+
+	          		        			break; 
+	          		        		case Config.US_NEWSEVENTS: // news and evnets 入口
+	          		        			folder = "News";
+
+	          		        			break; 
+	          		        		case Config.US_BUSINESS: // business 入口
+	          		        			folder = "Business";
+
+	          		        			break; 
+	          		        		case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
+
+	          		        			break; 
+	          		        		case Config.US_AROUNDME: // around me
+	          		        			break;
+	          		        		case Config.US_DOWNLOAD: // download 入口
+	          		        			folder = "Download";
+
+	          		        		case Config.US_PRODUCT: // product 入口
+	          		        			folder = "Product";
+
+	          		        			break;
+	          		        		case Config.US_INBOX: // push message 入口
+	          		        			break;
+	          		        		}
+	            		              File f = new File(storagePath + "/KLinkAPP/" + folder + "/",fileName);
 	            		              Log.i("store path====",storagePath + "/KLinkAPP/Product/");
 
 	            		              FileOutputStream fos = new FileOutputStream(f);
@@ -850,7 +1297,10 @@ private void sendMsg(int flag)
 	    protected String doInBackground(String... params) {
 	        String url = params[0];
 	        try {
-	            ArrayList<Video> videos = getStreamingUrisFromYouTubePage(url,params[1]);
+	        	
+	        //	downloadVideo("http://v4.cache1.c.youtube.com/CiILENy73wIaGQk4RDShYkdS1BMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp","test.3gp");
+	        
+	        	ArrayList<Video> videos = getStreamingUrisFromYouTubePage(url,params[1]);
 	            if (videos != null && !videos.isEmpty()) {
 	                String retVidUrl = null;
 	                for (Video video : videos) {
@@ -891,9 +1341,11 @@ private void sendMsg(int flag)
 	                        }
 	                    }
 	                }
-
+	                Log.i("retVidUrl ===",retVidUrl);
 	                return retVidUrl;
 	            }
+	            
+	            
 	        } catch (Exception e) {
 	            Log.i("Couldn't get YouTube streaming URL", "");
 	        }
