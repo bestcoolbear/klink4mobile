@@ -70,6 +70,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
+import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebSettings.ZoomDensity;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -160,7 +161,7 @@ public class WebActivity extends BaseActivity {
 		usType = getIntent().getIntExtra("usType", Config.US_ABOUT);
 		url = getIntent().getStringExtra("url");
 		text = getIntent().getStringExtra("title");
-		
+		Log.i("text=====", text);
 		// TOP BAR
 		topBar = (TopBar) this.findViewById(R.id.topBar);
 		topBar.getLogoImageView().setVisibility(View.GONE);
@@ -232,13 +233,27 @@ public class WebActivity extends BaseActivity {
 
 		// WEBVIEW
 		webView = (WebView) this.findViewById(R.id.webView);
-		 WebSettings webSettings = webView.getSettings();
+		WebSettings webSettings = webView.getSettings();
 		webView.getSettings().setTextSize(WebSettings.TextSize.LARGEST);
 		webView.getSettings().setJavaScriptEnabled(true); // 设置支持Javascript
 		webView.getSettings().setDomStorageEnabled(true);
+	//	webView.getSettings().setSupportZoom(true);
+	//	webView.getSettings().setBuiltInZoomControls(true);
+	//	webView.getSettings().setUseWideViewPort(true);
+		
+		if(!text.contains("K-FuelSaver")){
+			webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);  
+		}
+		
+		
 		if(width > 480 && height > 800){
-			webView.getSettings().setLoadWithOverviewMode(true);
-			webView.getSettings().setUseWideViewPort(true);
+			//webView.getSettings().setLoadWithOverviewMode(true);
+			//webView.getSettings().setUseWideViewPort(true);
+			webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+
+		}else{
+			//webView.getSettings().setLoadWithOverviewMode(true);
+			webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
 		}
 		webView.requestFocus();// 触摸焦点起作用
 		//webView.setInitialScale(110);//

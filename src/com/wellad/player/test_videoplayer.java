@@ -268,7 +268,7 @@ public class test_videoplayer extends Activity {
 	            itag = m1.group(1);
 	        }
 
-	        Pattern p2 = Pattern.compile("sig=(.*?)[&]");
+	        Pattern p2 = Pattern.compile("signature=(.*?)[&]");
 	        Matcher m2 = p2.matcher(url);
 	        String sig = null;
 	        if (m2.find()) {

@@ -62,9 +62,9 @@ public class AboutUsDetailActivity extends BaseActivity implements OnItemClickLi
 		intent.putExtra("subcatid", subcatid);
 		a.startActivity(intent);
 		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-		if (finish) {
-			a.finish();
-		}
+//		if (finish) {
+//			a.finish();
+//		}
 	}
 
 	@Override
@@ -126,30 +126,27 @@ public class AboutUsDetailActivity extends BaseActivity implements OnItemClickLi
 									if(sb.getSubcatname().contains("Plan")){
 										Config.BUSINESS_OPP_LIST.clear();
 										Config.BUSINESS_OPP_LIST = pCallbackValue;
+										listView.setVisibility(View.INVISIBLE);
+										launch(AboutUsDetailActivity.this, usType, sb.getSubcatname(), sb.getSubcatid(), true);
+										return;
 									}
-									
-									listView.setVisibility(View.INVISIBLE);
-									launch(AboutUsDetailActivity.this, usType, sb.getSubcatname(), sb.getSubcatid(), true);
-
-							}else if(usType == Config.US_DOWNLOAD){
+							}
+							
+							if(usType == Config.US_DOWNLOAD){
 								SubCateBean sb = pCallbackValue.get(0);
-								if(sb.getSubcatname().contains("english riddance")){
+								if(sb.getSubcatname().contains("english riddance_")){
 									Config.BUSINESS_OPP_LIST.clear();
 									Config.BUSINESS_OPP_LIST = pCallbackValue;
+									listView.setVisibility(View.INVISIBLE);
+									launch(AboutUsDetailActivity.this, usType, sb.getSubcatname(), sb.getSubcatid(), true);
+									return;
 								}
-								
-								listView.setVisibility(View.INVISIBLE);
-								launch(AboutUsDetailActivity.this, usType, sb.getSubcatname(), sb.getSubcatid(), true);
-								
 							}
 
-							else{
 								Config.BUSINESS_OPP_LIST.clear();
 								listView.setVisibility(View.VISIBLE);
 								subCateBeanAdapter.setList(pCallbackValue);
 								listView.setAdapter(subCateBeanAdapter);
-								//
-							}
 						}
 						
 					}
