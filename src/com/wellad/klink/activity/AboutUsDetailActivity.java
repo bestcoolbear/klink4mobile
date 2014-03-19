@@ -224,6 +224,8 @@ public class AboutUsDetailActivity extends BaseActivity implements OnItemClickLi
 				intent.setData(content_url);
 				startActivity(intent);
 			} else {
+				Log.i("sub catname ======= ", bean.getSubcatname() + "   " + bean.getSubcatid());
+				//Config.LAST_SUB_NAME = subcatname;
 				launch(AboutUsDetailActivity.this, usType, bean.getSubcatname(), bean.getSubcatid(), true);
 			}
 		}

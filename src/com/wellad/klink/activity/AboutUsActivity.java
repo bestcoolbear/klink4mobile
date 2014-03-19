@@ -324,6 +324,10 @@ public class AboutUsActivity extends BaseActivity implements OnItemClickListener
 		intent.putExtra("subcatname", bean.getSubcatname());
 		intent.putExtra("subcatid", bean.getSubcatid());
 		AboutUsActivity.this.startActivity(intent);
+		
+		Log.i("subcatname ID ==== ",bean.getSubcatid());
+		Config.LAST_SUB_NAME = bean.getSubcatid();
+		
 		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 	//	if (AboutUsActivity.this) {
 		//	AboutUsActivity.this.finish();

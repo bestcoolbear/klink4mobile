@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -77,6 +78,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.ZoomButtonsController;
 
 /**
  * 
@@ -100,6 +102,7 @@ public class WebActivity extends BaseActivity {
 
 	ImageButton leftimage;
 	ImageButton rightimage;
+	ImageButton favbutton;
 	int currentsubindex = 0;
 
 	/**
@@ -164,59 +167,24 @@ public class WebActivity extends BaseActivity {
 		Log.i("text=====", text);
 		// TOP BAR
 		topBar = (TopBar) this.findViewById(R.id.topBar);
+		
 		topBar.getLogoImageView().setVisibility(View.GONE);
 		topBar.getBackImageButton().setVisibility(View.VISIBLE);
 		topBar.getTitleTextView().setText(text);
 		productname = text + "_" + Config.APP_USER_LANGUAGE;
 
 		initTopBarEvent(this);
-		topBar.getFavoriteButton().setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-				 String folder = "";
-	   		       	switch (usType) {
-	        		case Config.US_ABOUT: // about us 入口
-	        			folder = "About Us";
-	        			break;
-	        		case Config.US_CONTACT: // contact us 入口
-	        			folder = "Contact";
-
-	        			break; 
-	        		case Config.US_NEWSEVENTS: // news and evnets 入口
-	        			folder = "News";
-
-	        			break; 
-	        		case Config.US_BUSINESS: // business 入口
-	        			folder = "Business";
-
-	        			break; 
-	        		case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
-
-	        			break; 
-	        		case Config.US_AROUNDME: // around me
-	        			break;
-	        		case Config.US_DOWNLOAD: // download 入口
-	        			folder = "Download";
-
-	        		case Config.US_PRODUCT: // product 入口
-	        			folder = "Product";
-
-	        			break;
-	        		case Config.US_INBOX: // push message 入口
-	        			break;
-	        		}
-				add2FavoriteAndSave2Sdcard(folder);
-				//add2Favorite();
-			}
-			
-		});
+//		topBar.getFavoriteButton().setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				
+//			}
+//		});
 		
 		leftimage = (ImageButton) this.findViewById(R.id.imageButtonLeft);
 		rightimage = (ImageButton) this.findViewById(R.id.imageButtonRight);
-
+		favbutton = (ImageButton)this.findViewById(R.id.imageButton1);
 		leftimage.setVisibility(View.INVISIBLE);
 		rightimage.setVisibility(View.INVISIBLE);
 		
@@ -234,31 +202,43 @@ public class WebActivity extends BaseActivity {
 		// WEBVIEW
 		webView = (WebView) this.findViewById(R.id.webView);
 		WebSettings webSettings = webView.getSettings();
-		webView.getSettings().setTextSize(WebSettings.TextSize.LARGEST);
+		//webView.getSettings().setTextSize(WebSettings.TextSize.LARGEST);
 		webView.getSettings().setJavaScriptEnabled(true); // 设置支持Javascript
 		webView.getSettings().setDomStorageEnabled(true);
-	//	webView.getSettings().setSupportZoom(true);
-	//	webView.getSettings().setBuiltInZoomControls(true);
+		webView.getSettings().setSupportZoom(true);
+		webView.getSettings().setDefaultZoom(ZoomDensity.MEDIUM);//
+		webView.getSettings().setBuiltInZoomControls(true);
+	//	webView.setInitialScale(100);
 	//	webView.getSettings().setUseWideViewPort(true);
+	//    setZoomControlGone(webView);  
 		
-		if(!text.contains("K-FuelSaver")){
-			webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);  
-		}
+	
 		
 		
 		if(width > 480 && height > 800){
 			//webView.getSettings().setLoadWithOverviewMode(true);
 			//webView.getSettings().setUseWideViewPort(true);
-			webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+		//	webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
 
 		}else{
 			//webView.getSettings().setLoadWithOverviewMode(true);
-			webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+		//	webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
 		}
-		webView.requestFocus();// 触摸焦点起作用
+	//	webView.requestFocus();// 触摸焦点起作用
 		//webView.setInitialScale(110);//
 		webView.loadUrl(url);
+		if(!text.contains("K-FuelSaver")){
+			webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);  
+		}
+		
+		if(text.contains("Plan A") || text.contains("Plan B") || text.contains("english riddance_Page")){
+			webView.getSettings().setUseWideViewPort(true);
+			webView.setInitialScale(100);
+		}
+		
 		htmlurl = url;
+		
+		/*
 		DisplayMetrics metrics = new DisplayMetrics();
 		  getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		  int mDensity = metrics.densityDpi;
@@ -273,6 +253,7 @@ public class WebActivity extends BaseActivity {
 		  }else if (mDensity == DisplayMetrics.DENSITY_TV){
 		   webSettings.setDefaultZoom(ZoomDensity.FAR);
 		  }
+		*/
 		
 		proDialog = ProgressDialog.show(this, getResources().getString(R.string.webview_load_title), getResources().getString(R.string.webview_load_wait));
 		
@@ -323,15 +304,19 @@ public class WebActivity extends BaseActivity {
         			    intent.setData(content_url); 
         			    startActivity(intent);
 					}
+
 					return true;
 				case Config.US_NEWSEVENTS: // news and evnets 入口
+
 					break; 
 				case Config.US_BUSINESS: // business 入口
-					
+
 					break;
 				case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
+
 					break; 
 				case Config.US_DOWNLOAD: // download 入口
+
 					if(url.contains("youtube.com") || url.contains("youtu")){
 	            		Log.i("play video",url);
 	            		if(url != null && url.length() > 0)
@@ -389,38 +374,93 @@ public class WebActivity extends BaseActivity {
 		// TODO 老顾，几个入口的地方都标示出来了
 				switch (usType) {
 				case Config.US_ABOUT: // about us 入口
+					favbutton.setVisibility(View.INVISIBLE);
+
+					if(Config.LAST_SUB_NAME.equals("18")){
+						webView.getSettings().setUseWideViewPort(true);
+						webView.setInitialScale(100);
+					}
 					break;
 				case Config.US_CONTACT: // contact us 入口
+					favbutton.setVisibility(View.INVISIBLE);
+
 					break; 
 				case Config.US_NEWSEVENTS: // news and evnets 入口
+					favbutton.setVisibility(View.VISIBLE);
+
+					webView.getSettings().setUseWideViewPort(true);
+					webView.setInitialScale(100);
 					break; 
 				case Config.US_BUSINESS: // business 入口
+					favbutton.setVisibility(View.VISIBLE);
+
 					if(text.contains("Plan") ){
 						leftimage.setVisibility(View.VISIBLE);
 						rightimage.setVisibility(View.VISIBLE);
+						
 						currentsubindex = 0;
+						leftimage.setVisibility(View.INVISIBLE);
 					}
 					break;
 				case Config.US_DOWNLOAD: // download 入口
+					favbutton.setVisibility(View.VISIBLE);
+
 					if(text.contains("english riddance")){
 						leftimage.setVisibility(View.VISIBLE);
 						rightimage.setVisibility(View.VISIBLE);
 						currentsubindex = 0;
+						leftimage.setVisibility(View.INVISIBLE);
+					}
+					
+					if(Config.LAST_SUB_NAME.equals("122") || Config.LAST_SUB_NAME.equals("123")){
+						webView.getSettings().setUseWideViewPort(true);
+						webView.setInitialScale(100);
 					}
 					break; 
 				case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
+
 					filterDoUrl();
 					break; 
 				case Config.US_AROUNDME: // around me
+					favbutton.setVisibility(View.INVISIBLE);
+
 					break;
 				case Config.US_PRODUCT: // product 入口
+					favbutton.setVisibility(View.VISIBLE);
+
 					break;
 				case Config.US_INBOX: // push message 入口
+					favbutton.setVisibility(View.INVISIBLE);
+
 					break;
 				}
 		
 		
 	}
+	
+	
+	public void setZoomControlGone(View view) {  
+	    Class classType;  
+	    Field field;  
+	    try {  
+	        classType = WebView.class;  
+	        field = classType.getDeclaredField("mZoomButtonsController");  
+	        field.setAccessible(true);  
+	        ZoomButtonsController mZoomButtonsController = new ZoomButtonsController(view);  
+	        mZoomButtonsController.getZoomControls().setVisibility(View.GONE);  
+	        try {  
+	            field.set(view, mZoomButtonsController);  
+	        } catch (IllegalArgumentException e) {  
+	            e.printStackTrace();  
+	        } catch (IllegalAccessException e) {  
+	            e.printStackTrace();  
+	        }  
+	    } catch (SecurityException e) {  
+	        e.printStackTrace();  
+	    } catch (NoSuchFieldException e) {  
+	        e.printStackTrace();  
+	    }  
+	}  
 	
 	
 	private void filterDoUrl()
@@ -483,13 +523,53 @@ public class WebActivity extends BaseActivity {
 		return Config.LOADDETAILURL + id + "&lang=" + Config.APP_USER_LANGUAGE;
 	}
 	
+	
+	public void addtoFav(View view) {
+		 String folder = "";
+	       	switch (usType) {
+ 		case Config.US_ABOUT: // about us 入口
+ 			folder = "About Us";
+ 			break;
+ 		case Config.US_CONTACT: // contact us 入口
+ 			folder = "Contact";
+
+ 			break; 
+ 		case Config.US_NEWSEVENTS: // news and evnets 入口
+ 			folder = "News";
+
+ 			break; 
+ 		case Config.US_BUSINESS: // business 入口
+ 			folder = "Business";
+
+ 			break; 
+ 		case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
+
+ 			break; 
+ 		case Config.US_AROUNDME: // around me
+ 			break;
+ 		case Config.US_DOWNLOAD: // download 入口
+ 			folder = "Download";
+
+ 		case Config.US_PRODUCT: // product 入口
+ 			folder = "Product";
+
+ 			break;
+ 		case Config.US_INBOX: // push message 入口
+ 			break;
+ 		}
+		add2FavoriteAndSave2Sdcard(folder);
+		
+	}
+	
 	public void leftClick(View view) {
 		if(usType == Config.US_BUSINESS || usType == Config.US_DOWNLOAD){
 			if(Config.BUSINESS_OPP_LIST != null && Config.BUSINESS_OPP_LIST.size() > 0){
 				if(currentsubindex == 0){
 					  Toast.makeText(getApplicationContext(), "No more content,at first page!",
 							     Toast.LENGTH_SHORT).show();
+					  leftimage.setVisibility(View.INVISIBLE);
 				  }else{
+					  leftimage.setVisibility(View.VISIBLE);
 					   currentsubindex = currentsubindex -1;
 						ActivityUtils.doAsync(WebActivity.this,
 			    				R.string.ptitle_resource_id, R.string.ptitle_resource_id,
@@ -573,6 +653,8 @@ public class WebActivity extends BaseActivity {
 				  }else{
 					  Toast.makeText(getApplicationContext(), "No more content,at last page!",
 							     Toast.LENGTH_SHORT).show();
+					  rightimage.setVisibility(View.INVISIBLE);
+
 				  }
 			}
 		}

@@ -79,7 +79,7 @@ public class Config {
 	public static String VIDEO_Name;
     public static String VIDEO_URL;
     public static String catid;
-    
+    public static String LAST_SUB_NAME;
     
     public static List<SubCateBean> BUSINESS_OPP_LIST = new ArrayList<SubCateBean>();
 
