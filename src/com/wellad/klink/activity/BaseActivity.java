@@ -57,6 +57,7 @@ public class BaseActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if(webView != null){
+					webView.getSettings().setBuiltInZoomControls(false);
 					webView.destroy();
 				}
 				activity.finish();
@@ -69,7 +70,9 @@ public class BaseActivity extends Activity {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if(webView != null){
+				webView.getSettings().setBuiltInZoomControls(false);
 				webView.destroy();
+			//	webView = null;
 			}
 			if (topBar != null) {
 				if (topBar.isDisplayMenu()) {
@@ -77,8 +80,6 @@ public class BaseActivity extends Activity {
 					return true;
 				}
 			}
-			
-			
 		}
 		return super.onKeyDown(keyCode, event);
 	}

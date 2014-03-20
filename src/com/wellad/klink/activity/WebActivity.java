@@ -170,7 +170,12 @@ public class WebActivity extends BaseActivity {
 		
 		topBar.getLogoImageView().setVisibility(View.GONE);
 		topBar.getBackImageButton().setVisibility(View.VISIBLE);
-		topBar.getTitleTextView().setText(text);
+		String displaytitlebar = text;
+		displaytitlebar = displaytitlebar.replaceAll("_en", "");
+		displaytitlebar = displaytitlebar.replaceAll("_cn", "");
+		displaytitlebar = displaytitlebar.replaceAll("_mala", "");
+		displaytitlebar = displaytitlebar.replaceAll(".html", "");
+		topBar.getTitleTextView().setText(displaytitlebar);
 		productname = text + "_" + Config.APP_USER_LANGUAGE;
 
 		initTopBarEvent(this);
@@ -219,10 +224,17 @@ public class WebActivity extends BaseActivity {
 			//webView.getSettings().setLoadWithOverviewMode(true);
 			//webView.getSettings().setUseWideViewPort(true);
 		//	webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
-
+			if(text.contains("Plan A") || text.contains("Plan B") || text.contains("english riddance_Page")){
+				webView.getSettings().setUseWideViewPort(true);
+				webView.setInitialScale(100);
+			}
 		}else{
 			//webView.getSettings().setLoadWithOverviewMode(true);
-		//	webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+			webView.getSettings().setTextSize(WebSettings.TextSize.SMALLER);
+			if(text.contains("Plan A") || text.contains("Plan B") || text.contains("english riddance_Page")){
+				webView.getSettings().setUseWideViewPort(false);
+				webView.setInitialScale(100);
+			}
 		}
 	//	webView.requestFocus();// 触摸焦点起作用
 		//webView.setInitialScale(110);//
@@ -231,10 +243,7 @@ public class WebActivity extends BaseActivity {
 			webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);  
 		}
 		
-		if(text.contains("Plan A") || text.contains("Plan B") || text.contains("english riddance_Page")){
-			webView.getSettings().setUseWideViewPort(true);
-			webView.setInitialScale(100);
-		}
+		
 		
 		htmlurl = url;
 		
@@ -313,7 +322,7 @@ public class WebActivity extends BaseActivity {
 
 					break;
 				case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
-
+					
 					break; 
 				case Config.US_DOWNLOAD: // download 入口
 
@@ -372,13 +381,22 @@ public class WebActivity extends BaseActivity {
 		
 		
 		// TODO 老顾，几个入口的地方都标示出来了
-				switch (usType) {
+		switch (usType) {
 				case Config.US_ABOUT: // about us 入口
 					favbutton.setVisibility(View.INVISIBLE);
 
 					if(Config.LAST_SUB_NAME.equals("18")){
-						webView.getSettings().setUseWideViewPort(true);
-						webView.setInitialScale(100);
+						
+						if(width > 480 && height > 800){
+							webView.getSettings().setUseWideViewPort(true);
+							webView.setInitialScale(100);
+
+						}else{
+							webView.getSettings().setUseWideViewPort(true);
+							//webView.setInitialScale(50);
+   						    webSettings.setDefaultZoom(ZoomDensity.FAR);
+							webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+						}
 					}
 					break;
 				case Config.US_CONTACT: // contact us 入口
@@ -388,22 +406,44 @@ public class WebActivity extends BaseActivity {
 				case Config.US_NEWSEVENTS: // news and evnets 入口
 					favbutton.setVisibility(View.VISIBLE);
 
-					webView.getSettings().setUseWideViewPort(true);
-					webView.setInitialScale(100);
+					if(width > 480 && height > 800){
+						webView.getSettings().setUseWideViewPort(true);
+						webView.setInitialScale(100);
+
+					}else{
+						webView.getSettings().setUseWideViewPort(true);
+						webSettings.setDefaultZoom(ZoomDensity.FAR);
+						webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+
+					}
 					break; 
 				case Config.US_BUSINESS: // business 入口
 					favbutton.setVisibility(View.VISIBLE);
 
 					if(text.contains("Plan") ){
-						leftimage.setVisibility(View.VISIBLE);
-						rightimage.setVisibility(View.VISIBLE);
-						
+						if(width > 480 && height > 800){
+							webView.getSettings().setUseWideViewPort(true);
+							webView.setInitialScale(100);
+						}else{
+							webView.getSettings().setUseWideViewPort(true);
+						    webSettings.setDefaultZoom(ZoomDensity.FAR);
+							webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+						}
 						currentsubindex = 0;
 						leftimage.setVisibility(View.INVISIBLE);
+						rightimage.setVisibility(View.VISIBLE);
+
 					}
 					break;
 				case Config.US_DOWNLOAD: // download 入口
-					favbutton.setVisibility(View.VISIBLE);
+					if(text.equals("Video")){
+						favbutton.setVisibility(View.INVISIBLE);
+						if(width > 480 && height > 800){
+							webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+						}
+					}else{
+						favbutton.setVisibility(View.VISIBLE);
+					}
 
 					if(text.contains("english riddance")){
 						leftimage.setVisibility(View.VISIBLE);
@@ -413,21 +453,38 @@ public class WebActivity extends BaseActivity {
 					}
 					
 					if(Config.LAST_SUB_NAME.equals("122") || Config.LAST_SUB_NAME.equals("123")){
-						webView.getSettings().setUseWideViewPort(true);
-						webView.setInitialScale(100);
+						if(width > 480 && height > 800){
+							webView.getSettings().setUseWideViewPort(true);
+							webView.setInitialScale(100);
+
+						}else{
+							webView.getSettings().setUseWideViewPort(true);
+						    webSettings.setDefaultZoom(ZoomDensity.FAR);
+							webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+						}
 					}
 					break; 
 				case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
-
+					favbutton.setVisibility(View.INVISIBLE);
 					filterDoUrl();
 					break; 
 				case Config.US_AROUNDME: // around me
 					favbutton.setVisibility(View.INVISIBLE);
+					leftimage.setVisibility(View.INVISIBLE);
+					rightimage.setVisibility(View.INVISIBLE);
 
 					break;
 				case Config.US_PRODUCT: // product 入口
 					favbutton.setVisibility(View.VISIBLE);
+					leftimage.setVisibility(View.INVISIBLE);
+					rightimage.setVisibility(View.INVISIBLE);
 
+//					if(width <= 480 && height <= 800){
+//						webView.getSettings().setUseWideViewPort(true);
+//					    webSettings.setDefaultZoom(ZoomDensity.CLOSE);
+//						webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+//					}
+					Log.i("set invisibale===========", "setinvisible");
 					break;
 				case Config.US_INBOX: // push message 入口
 					favbutton.setVisibility(View.INVISIBLE);
@@ -463,6 +520,7 @@ public class WebActivity extends BaseActivity {
 	}  
 	
 	
+    
 	private void filterDoUrl()
 	{
 		webView.setWebChromeClient(new WebChromeClient() {
@@ -568,8 +626,12 @@ public class WebActivity extends BaseActivity {
 					  Toast.makeText(getApplicationContext(), "No more content,at first page!",
 							     Toast.LENGTH_SHORT).show();
 					  leftimage.setVisibility(View.INVISIBLE);
+					  rightimage.setVisibility(View.VISIBLE);
+
 				  }else{
 					  leftimage.setVisibility(View.VISIBLE);
+					  rightimage.setVisibility(View.VISIBLE);
+
 					   currentsubindex = currentsubindex -1;
 						ActivityUtils.doAsync(WebActivity.this,
 			    				R.string.ptitle_resource_id, R.string.ptitle_resource_id,
@@ -614,7 +676,8 @@ public class WebActivity extends BaseActivity {
 		if(usType == Config.US_BUSINESS || usType == Config.US_DOWNLOAD){
 			if(Config.BUSINESS_OPP_LIST != null && Config.BUSINESS_OPP_LIST.size() > 0){
 				if(currentsubindex < Config.BUSINESS_OPP_LIST.size() - 1){
-					
+					  leftimage.setVisibility(View.VISIBLE);
+
 					currentsubindex = currentsubindex + 1;
 					ActivityUtils.doAsync(WebActivity.this,
 		    				R.string.ptitle_resource_id, R.string.ptitle_resource_id,
@@ -651,10 +714,11 @@ public class WebActivity extends BaseActivity {
 		    				}, true);
 					
 				  }else{
-					  Toast.makeText(getApplicationContext(), "No more content,at last page!",
-							     Toast.LENGTH_SHORT).show();
-					  rightimage.setVisibility(View.INVISIBLE);
+//					  Toast.makeText(getApplicationContext(), "No more content,at last page!",
+//							     Toast.LENGTH_SHORT).show();
+//					  rightimage.setVisibility(View.INVISIBLE);
 
+					  rightimage.setVisibility(View.INVISIBLE);
 				  }
 			}
 		}
@@ -699,15 +763,6 @@ public class WebActivity extends BaseActivity {
 				}, true);
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-		if (webView.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK) {
-			webView.goBack();// goBack()表示返回webView的上一页面
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
 
 	@Override
 	protected void onResume() {
