@@ -65,6 +65,9 @@ public class AboutUsDetailActivity extends BaseActivity implements OnItemClickLi
 //		if (finish) {
 //			a.finish();
 //		}
+		if(Config.BUSINESS_OPP_LIST.size() > 0){
+			a.finish();
+		}
 	}
 
 	@Override

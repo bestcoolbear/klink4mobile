@@ -249,6 +249,8 @@ public class CellTowerServicesSwang extends Service  {
 								    	   Config.aroundmeshop = new AroundMeShop(ashop.getShoplocationame(),ashop.getShopname(),ashop.getShopgpsx(),ashop.getShopgpsy(),ashop.getAreaname());
 								     }
 									
+									Config.TARGETX = ashop.getShopgpsx();
+									Config.TARGETY = ashop.getShopgpsy();
 									
 									 Config.STARTX = lng;
 									 Config.STARTY = lat;

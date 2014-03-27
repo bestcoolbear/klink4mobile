@@ -150,7 +150,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	 */
 	private void loging() {
 		ActivityUtils.doAsync(LoginActivity.this,
-				R.string.ptitle_resource_id, R.string.alert_login_ing,
+				R.string.ptitle_resource_id_no, R.string.alert_login_ing,
 				new Callable<String>() {
 
 					@Override

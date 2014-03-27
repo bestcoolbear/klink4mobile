@@ -20,13 +20,22 @@ import android.webkit.WebView;
 public class BaseActivity extends Activity {
 	protected TopBar topBar;
 	WebView webView;
-
+	public int inradioAD;
 	protected void initTopBarEvent(final Activity activity) {
 		topBar.getFavoriteButton().setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				if(webView != null){
+					//	webView.getSettings().setBuiltInZoomControls(false);
+						webView.getSettings().setBuiltInZoomControls(true);
+				        webView.setVisibility(View.GONE);
+						webView.destroy();
+					}
+				if(inradioAD == 1){
+					activity.finish();
+				}
 				ListActivity.launch(activity);
 			}
 		});
@@ -57,8 +66,11 @@ public class BaseActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if(webView != null){
-					webView.getSettings().setBuiltInZoomControls(false);
+				//	webView.getSettings().setBuiltInZoomControls(false);
+					webView.getSettings().setBuiltInZoomControls(true);
+			        webView.setVisibility(View.GONE);
 					webView.destroy();
+
 				}
 				activity.finish();
 			}
@@ -70,7 +82,9 @@ public class BaseActivity extends Activity {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if(webView != null){
-				webView.getSettings().setBuiltInZoomControls(false);
+			//	webView.getSettings().setBuiltInZoomControls(false);
+				webView.getSettings().setBuiltInZoomControls(true);
+		        webView.setVisibility(View.GONE);
 				webView.destroy();
 			//	webView = null;
 			}

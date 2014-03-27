@@ -25,6 +25,7 @@
     <string name="title_login">Log Masuk</string>
     <string name="title_register">Daftar</string>
     <string name="title_favorite">Kegemaran</string>
+            <string name="ptitle_resource_id_no"></string>
     
     <string name="ptitle_resource_id">Loading</string>
     <string name="pmessage_resource_id">loading@＃8230</string>

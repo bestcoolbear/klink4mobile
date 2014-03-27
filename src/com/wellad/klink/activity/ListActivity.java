@@ -62,6 +62,7 @@ public class ListActivity extends BaseActivity implements OnItemClickListener {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.list_activity);
+		inradioAD = -1;
 		topBar = (TopBar) this.findViewById(R.id.topBar);
 		topBar.getLogoImageView().setVisibility(View.GONE);
 		topBar.getBackImageButton().setVisibility(View.VISIBLE);

@@ -30,7 +30,9 @@
     <string name="title_inbox">Inbox</string>
     <string name="title_around">Around Me</string>
     
-    <string name="ptitle_resource_id">Wait</string>
+    <string name="ptitle_resource_id">Loading</string>
+        <string name="ptitle_resource_id_no"></string>
+    
     <string name="pmessage_resource_id">loading&#8230;</string>
     
   	<string name="webview_load_title">Connecting&#8230;</string>
@@ -50,10 +52,10 @@
     <string name="alert_register_ing">Registering&#8230;</string>
     <string name="alert_register_ok">Register successfully!</string>
   	<string name="alert_register_failed_4">Username is already in use.</string>
-  	<string name="alert_register_failed_3">Login failed. Youare not connected to the internet.</string>
+  	<string name="alert_register_failed_3">Login failed. You are not connected to the internet.</string>
   	<string name="alert_register_failed_6">Invalid username or password.</string>
   	
-  	<string name="alert_login_ing">Loging&#8230;</string>
+  	<string name="alert_login_ing">Logging In&#8230;</string>
   	<string name="alert_login_ok">Loging successfully!</string>
     
     <string name="gender_male">male</string>

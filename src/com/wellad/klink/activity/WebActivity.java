@@ -128,8 +128,10 @@ public class WebActivity extends BaseActivity {
 			  htmlstring = GeneralTools.getPageHtmlString(htmlurl);
 				if(htmlstring != null && htmlstring.length() > 0)
 				{
+					Log.i("send 10", "10");
 					sendMsg(10);
 				}else{
+					Log.i("send 11", "11");
 					sendMsg(11);
 				}
 			}
@@ -144,6 +146,7 @@ public class WebActivity extends BaseActivity {
 			Log.i("sd root",sdroot);
 			if(sdroot != null && sdroot.length() > 0)
 			{
+				Log.i("add to favoret", subcatename);
 				FileUtil.creatDir("KLinkAPP/" + subcatename);
 				if(htmlurl != null && htmlurl.length() > 0)
 				{
@@ -160,6 +163,7 @@ public class WebActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.web_activity);
+		inradioAD = -1;
 		// CONTENT
 		usType = getIntent().getIntExtra("usType", Config.US_ABOUT);
 		url = getIntent().getStringExtra("url");
@@ -294,6 +298,34 @@ public class WebActivity extends BaseActivity {
 				case Config.US_ABOUT: // about us 入口
 					break;
 				case Config.US_AROUNDME: // around me
+					if(url.contains("GET")){
+            			//Config.TARGETX = items3.get(index).getShopgpsx();
+            			//Config.TARGETY = items3.get(index).getShopgpsy();
+            			//GeneralTools.jumpToGoogleMap(AroundMeActivity.this, AroundMeActivity.this);
+            	        String urlg = "http://maps.google.com/maps?saddr=" + Config.STARTY + "," + Config.STARTX + "5&daddr=" + Config.TARGETX + "," + Config.TARGETY;
+            		    Uri uri = Uri.parse(urlg);  
+            		    Intent it  = new Intent(Intent.ACTION_VIEW,uri);  
+            		    startActivity(it);   
+            		}
+					if(url.contains("Phone") || url.contains("电话") || url.contains("Tel") || url.contains("tel") || url.contains("phone")){
+            			int index = url.lastIndexOf(":");
+            			if(index > 0){
+            				String phonenumber = url.substring(index);
+            				Log.i(phonenumber,phonenumber);
+            				
+            				Intent phoneIntent = new Intent("android.intent.action.CALL",
+            				Uri.parse("tel:" + phonenumber));
+            				startActivity(phoneIntent);
+            			}
+            		}
+					if(url.contains("maps.google.com") || url.contains("youtube.com") || url.contains("facebook.com") || url.contains("k-link.com")){
+        			 	Intent intent= new Intent();       
+        			    intent.setAction("android.intent.action.VIEW");   
+        			    Uri content_url = Uri.parse(url);  
+        			    intent.setData(content_url); 
+        			    startActivity(intent);
+					}
+					break;
 				case Config.US_CONTACT: // contact us 入口
 					if(url.contains("Phone") || url.contains("电话") || url.contains("Tel") || url.contains("tel") || url.contains("phone")){
             			int index = url.lastIndexOf(":");
@@ -385,17 +417,21 @@ public class WebActivity extends BaseActivity {
 				case Config.US_ABOUT: // about us 入口
 					favbutton.setVisibility(View.INVISIBLE);
 
-					if(Config.LAST_SUB_NAME.equals("18")){
+					if(Config.LAST_SUB_NAME.equals("18") || Config.LAST_SUB_NAME.equals("20")){
 						
 						if(width > 480 && height > 800){
 							webView.getSettings().setUseWideViewPort(true);
 							webView.setInitialScale(100);
+							webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+							webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.NORMAL);  
 
 						}else{
 							webView.getSettings().setUseWideViewPort(true);
 							//webView.setInitialScale(50);
    						    webSettings.setDefaultZoom(ZoomDensity.FAR);
 							webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+							webView.setInitialScale(40);
+
 						}
 					}
 					break;
@@ -414,6 +450,7 @@ public class WebActivity extends BaseActivity {
 						webView.getSettings().setUseWideViewPort(true);
 						webSettings.setDefaultZoom(ZoomDensity.FAR);
 						webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+						webView.setInitialScale(40);
 
 					}
 					break; 
@@ -428,6 +465,7 @@ public class WebActivity extends BaseActivity {
 							webView.getSettings().setUseWideViewPort(true);
 						    webSettings.setDefaultZoom(ZoomDensity.FAR);
 							webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+							webView.setInitialScale(40);
 						}
 						currentsubindex = 0;
 						leftimage.setVisibility(View.INVISIBLE);
@@ -440,6 +478,9 @@ public class WebActivity extends BaseActivity {
 						favbutton.setVisibility(View.INVISIBLE);
 						if(width > 480 && height > 800){
 							webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+						}else{
+							webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+							webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);  
 						}
 					}else{
 						favbutton.setVisibility(View.VISIBLE);
@@ -461,12 +502,36 @@ public class WebActivity extends BaseActivity {
 							webView.getSettings().setUseWideViewPort(true);
 						    webSettings.setDefaultZoom(ZoomDensity.FAR);
 							webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+							webView.setInitialScale(40);
+
 						}
+					}
+					
+					if(Config.LAST_SUB_NAME.equals("124")){
+						inradioAD = 1;
 					}
 					break; 
 				case Config.US_DOWNLOAD_RECORD: // 从下载记录中 入口
 					favbutton.setVisibility(View.INVISIBLE);
 					filterDoUrl();
+					if(width > 480 && height > 800){
+						Log.i("US_DOWNLOAD_RECORD", "US_DOWNLOAD_RECORD");
+					    webSettings.setDefaultZoom(ZoomDensity.FAR);
+						webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);  
+						webView.getSettings().setUseWideViewPort(true);
+						webView.setInitialScale(200);
+						
+						if(text.contains("K-FuelSaver")){
+							webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.NORMAL);  
+
+						}
+
+					}else{
+						webView.getSettings().setUseWideViewPort(true);
+					    webSettings.setDefaultZoom(ZoomDensity.FAR);
+						webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+						webView.setInitialScale(40);
+					}
 					break; 
 				case Config.US_AROUNDME: // around me
 					favbutton.setVisibility(View.INVISIBLE);
@@ -480,11 +545,13 @@ public class WebActivity extends BaseActivity {
 					rightimage.setVisibility(View.INVISIBLE);
 
 //					if(width <= 480 && height <= 800){
-//						webView.getSettings().setUseWideViewPort(true);
+//						webView.getSettings().setUseWideViewPort(false);
 //					    webSettings.setDefaultZoom(ZoomDensity.CLOSE);
 //						webView.getSettings().setTextSize(WebSettings.TextSize.NORMAL);
+//						webView.setInitialScale(40);
+//
 //					}
-					Log.i("set invisibale===========", "setinvisible");
+//					Log.i("set invisibale===========", "setinvisible");
 					break;
 				case Config.US_INBOX: // push message 入口
 					favbutton.setVisibility(View.INVISIBLE);
@@ -607,7 +674,7 @@ public class WebActivity extends BaseActivity {
  			break;
  		case Config.US_DOWNLOAD: // download 入口
  			folder = "Download";
-
+ 			break;
  		case Config.US_PRODUCT: // product 入口
  			folder = "Product";
 
@@ -623,8 +690,7 @@ public class WebActivity extends BaseActivity {
 		if(usType == Config.US_BUSINESS || usType == Config.US_DOWNLOAD){
 			if(Config.BUSINESS_OPP_LIST != null && Config.BUSINESS_OPP_LIST.size() > 0){
 				if(currentsubindex == 0){
-					  Toast.makeText(getApplicationContext(), "No more content,at first page!",
-							     Toast.LENGTH_SHORT).show();
+					 // Toast.makeText(getApplicationContext(), "No more content,at first page!", Toast.LENGTH_SHORT).show();
 					  leftimage.setVisibility(View.INVISIBLE);
 					  rightimage.setVisibility(View.VISIBLE);
 
@@ -633,6 +699,11 @@ public class WebActivity extends BaseActivity {
 					  rightimage.setVisibility(View.VISIBLE);
 
 					   currentsubindex = currentsubindex -1;
+					   
+					   if(currentsubindex == 0){
+						   leftimage.setVisibility(View.INVISIBLE);
+							  rightimage.setVisibility(View.VISIBLE);
+					   }
 						ActivityUtils.doAsync(WebActivity.this,
 			    				R.string.ptitle_resource_id, R.string.ptitle_resource_id,
 			    				new Callable<ArrayList<ArticleBean>>() {
@@ -791,6 +862,22 @@ public class WebActivity extends BaseActivity {
 		        	//  FileUtil.SavedToText("/KLinkAPP/Product/",productname + ".html",htmlstring);
 		        	  imagevector.clear();//清空
 		        	  videovector.clear();//清空
+		        	  urlvector.clear();//clear
+
+		        	  
+		        	  try {  
+		        		  org.jsoup.nodes.Document doc = Jsoup.parse(htmlstring);
+		        		  Elements links = doc.getElementsByTag("source");
+		        		  for (org.jsoup.nodes.Element link : links) {
+		        		    String linkHref = link.attr("src");
+		        		    if(linkHref != null && linkHref.length() > 0){
+		        		    	urlvector.add(linkHref);
+		        		    }
+		        		  }
+		              } catch (Exception e) {  
+		                  e.printStackTrace();  
+		              }  
+
 		        	  
 		        	  try {  
 		        		  org.jsoup.nodes.Document doc = Jsoup.parse(htmlstring);
@@ -856,7 +943,7 @@ public class WebActivity extends BaseActivity {
 									        			break;
 									        		case Config.US_DOWNLOAD: // download 入口
 									        			folder = "Download";
-
+									        			break;
 									        		case Config.US_PRODUCT: // product 入口
 									        			folder = "Product";
 
@@ -922,7 +1009,7 @@ public class WebActivity extends BaseActivity {
 		        			break;
 		        		case Config.US_DOWNLOAD: // download 入口
 		        			folder = "Download";
-
+		        			break;
 		        		case Config.US_PRODUCT: // product 入口
 		        			folder = "Product";
 
@@ -931,6 +1018,12 @@ public class WebActivity extends BaseActivity {
 		        			break;
 		        		}
 		         	  
+		   		     for(int i = 0; i < urlvector.size(); i ++){
+		        		  String urlstr = urlvector.elementAt(i);
+		        		  if(urlstr.endsWith(".mp3") || urlstr.endsWith(".MP3")){
+		        			  htmlstring = htmlstring.replaceAll(urlstr,Config.IMAGEURL + urlstr);
+		        		  }
+		        	  }
 		        	  FileUtil.SavedToText("/KLinkAPP/" + folder + "/",productname + ".html",htmlstring);
 		        	 
 		        	//  GeneralTools.jumpToFav(ProductActivity.this,ProductActivity.this);
@@ -1178,7 +1271,7 @@ private void sendMsg(int flag)
 		        			break;
 		        		case Config.US_DOWNLOAD: // download 入口
 		        			folder = "Download";
-
+		        			break;
 		        		case Config.US_PRODUCT: // product 入口
 		        			folder = "Product";
 
@@ -1393,7 +1486,7 @@ private void sendMsg(int flag)
 	          		        			break;
 	          		        		case Config.US_DOWNLOAD: // download 入口
 	          		        			folder = "Download";
-
+	          		        			break;
 	          		        		case Config.US_PRODUCT: // product 入口
 	          		        			folder = "Product";
 
